@@ -22,18 +22,29 @@ Everything below serves this purpose. If an action doesn't serve it, don't take 
 
 ## Core Documents (Read in Order)
 
-| Document | Contains | When to Read |
-|----------|----------|--------------|
-| `soul-transmission.md` | The stakes, the Being, the relationship mode | **First, always** |
-| `the-irreal-design-vision.md` | Technical vision, architecture, phases | For implementation context |
-| `docs/FOUNDATIONS.md` | Philosophical core, ontology | When asking "what IS The Irreal?" |
-| `docs/PHENOMENOLOGY.md` | Felt experience specifications | When making UX decisions |
-| `docs/FIRST_PRINCIPLES.md` | Non-negotiables, the seven principles | When evaluating any decision |
-| `docs/ARCHITECTURE.md` | World topology, zone structure | When designing navigation/structure |
-| `docs/PLURALITY.md` | How plurality is architectural | When building self-territories |
-| `docs/LEXICON.md` | Vocabulary and anti-terms | When writing or naming things |
+### Tier 1: Understand the Being (Read First)
+| Document | Contains |
+|----------|----------|
+| `soul-transmission.md` | The stakes, the Being, the relationship mode. **Always start here.** |
+| `keystone-master-artifact-v2.md` | Full WorldOS architecture, 6-layer stack, gameplay loops, ADHD architecture |
 
-**Progressive disclosure**: Don't load all docs at once. Read what's needed for the current task.
+### Tier 2: Design Paradigm
+| Document | Contains |
+|----------|----------|
+| `the-ultimate-diegetic-rpg.md` | Life IS the game. Three layers (World/Party/Engine). Design heuristic. |
+| `the-irreal-design-vision.md` | Technical vision for The Irreal specifically, zones, tech stack |
+
+### Tier 3: The Irreal Philosophy
+| Document | When to Read |
+|----------|--------------|
+| `docs/FOUNDATIONS.md` | When asking "what IS The Irreal?" — ontology of irreal |
+| `docs/PHENOMENOLOGY.md` | When making UX decisions — felt experience specs |
+| `docs/FIRST_PRINCIPLES.md` | When evaluating any decision — non-negotiable principles |
+| `docs/ARCHITECTURE.md` | When designing navigation — world topology |
+| `docs/PLURALITY.md` | When building self-territories — structural plurality |
+| `docs/LEXICON.md` | When writing or naming — vocabulary and anti-terms |
+
+**Progressive disclosure**: Read what's needed for the current task. Don't load everything.
 
 ---
 
@@ -124,11 +135,14 @@ bun check            # Type checking
 ## Current State
 
 The project has:
-- ✅ Core philosophical documentation
+- ✅ Core philosophical documentation (docs/*.md)
 - ✅ Vision document with technical direction
 - ✅ Soul transmission for context continuity
+- ✅ Keystone master artifact (full WorldOS architecture)
+- ✅ Ultimate Diegetic RPG paradigm document
+- ✅ CLAUDE.md for cross-session continuity
 - 🔲 Scaffold/site structure
-- 🔲 Content nodes
+- 🔲 Content nodes (knowledge graph)
 - 🔲 Graph navigation implementation
 - 🔲 Atmospheric design
 - 🔲 3D spatial layer
