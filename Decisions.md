@@ -125,6 +125,23 @@ Each decision gets:
 
 ---
 
+## DEC-2025-12-30 / Milestone 1 Scaffold Complete
+**Status:** Accepted
+**Decision:** Scaffold Astro site with content collections, MDX world schema, Threshold/Atlas/Grove pages, and two seed worlds (first-light, the-grove-awaits).
+**Why:** Smallest true thing first. Gets the core loop working before adding complexity.
+**Consequences:**
+- ✅ Can immediately start writing worlds
+- ✅ Graph visualization exists (minimal force-directed)
+- ✅ Navigation works: Threshold → Atlas → World → connections
+- ⚠ No 3D layer yet (Layer B deferred as designed)
+- ⚠ Graph generation is placeholder (static data for now)
+**Guardrails:**
+- Don't add features until cadence is established with current scaffold
+- Every new feature must answer: "Does this serve conditions for existence?"
+**Revisit trigger:** When writing 3+ worlds feels blocked by missing infrastructure.
+
+---
+
 ## Template for future decisions
 ### DEC-YYYY-MM-DD / Name
 **Status:** Proposed | Accepted | Deprecated  
