@@ -1,0 +1,221 @@
+---
+/**
+ * World Page
+ * Renders a single world (content node).
+ * Shows content + choices + connections.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const worlds = await getCollection('worlds');
+  return worlds.map(world => ({
+    params: { id: world.data.id },
+    props: { world },
+  }));
+}
+
+const { world } = Astro.props;
+const { Content } = await render(world);
+
+const stageLabels: Record<string, string> = {
+  seedling: '🌱 Seedling',
+  growing: '🌿 Growing',
+  evergreen: '🌲 Evergreen',
+};
+
+const biomeLabels: Record<string, string> = {
+  threshold: '🚪 Threshold',
+  lore: '📜 Lore',
+  creation: '🔨 Creation',
+  reflection: '🪞 Reflection',
+  play: '🎲 Play',
+  deep: '🌊 Deep',
+};
+---
+
+<BaseLayout title={`${world.data.title} — The Irreal`}>
+  <article class="world">
+    <header class="world-header">
+      <nav class="breadcrumb">
+        <a href="/">Threshold</a>
+        <span class="separator">→</span>
+        <a href="/atlas">Atlas</a>
+        <span class="separator">→</span>
+        <span class="current">{world.data.title}</span>
+      </nav>
+
+      <h1 class="world-title">{world.data.title}</h1>
+
+      <div class="world-meta">
+        <span class={`stage stage-${world.data.stage}`}>
+          {stageLabels[world.data.stage]}
+        </span>
+        <span class="biome">{biomeLabels[world.data.biome]}</span>
+        {world.data.self && (
+          <span class="self">by {world.data.self}</span>
+        )}
+      </div>
+    </header>
+
+    <div class="world-content">
+      <Content />
+    </div>
+
+    {world.data.choices && world.data.choices.length > 0 && (
+      <nav class="choices">
+        <h2>Paths forward</h2>
+        <ul>
+          {world.data.choices.map((choice: any) => (
+            <li>
+              <a href={choice.to} class="choice">
+                {choice.label}
+                {choice.gives && (
+                  <span class="gives">+{choice.gives.join(', ')}</span>
+                )}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )}
+
+    {world.data.connections && world.data.connections.length > 0 && (
+      <aside class="connections">
+        <h2>Connected</h2>
+        <ul>
+          {world.data.connections.map((conn: string) => (
+            <li>
+              <a href={`/world/${conn}`}>{conn}</a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    )}
+
+    <footer class="world-footer">
+      <a href="/atlas">← Back to Atlas</a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .world {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .world-header {
+    margin-bottom: 2rem;
+  }
+
+  .breadcrumb {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+  }
+
+  .breadcrumb a {
+    color: var(--text-dim);
+  }
+
+  .breadcrumb a:hover {
+    color: var(--accent);
+  }
+
+  .separator {
+    opacity: 0.5;
+  }
+
+  .world-title {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 1rem;
+  }
+
+  .world-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+  }
+
+  .stage-seedling { color: var(--seedling); }
+  .stage-growing { color: var(--growing); }
+  .stage-evergreen { color: var(--evergreen); }
+
+  .world-content {
+    line-height: 1.8;
+    margin-bottom: 3rem;
+  }
+
+  .world-content :global(h2) {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .world-content :global(p) {
+    margin-bottom: 1rem;
+  }
+
+  .world-content :global(a) {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .choices, .connections {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--surface);
+    border-radius: 8px;
+  }
+
+  .choices h2, .connections h2 {
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    color: var(--text-dim);
+  }
+
+  .choices ul, .connections ul {
+    list-style: none;
+  }
+
+  .choice {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    background: var(--deep);
+    border-radius: 4px;
+    border: 1px solid var(--muted);
+    transition: all 0.2s;
+  }
+
+  .choice:hover {
+    border-color: var(--accent);
+    background: var(--muted);
+  }
+
+  .gives {
+    margin-left: auto;
+    color: var(--seedling);
+    font-size: 0.85rem;
+  }
+
+  .world-footer {
+    padding-top: 2rem;
+    border-top: 1px solid var(--muted);
+  }
+
+  .world-footer a {
+    color: var(--text-dim);
+  }
+</style>

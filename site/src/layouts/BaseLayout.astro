@@ -1,0 +1,108 @@
+---
+/**
+ * BaseLayout
+ * The atmospheric container for all of The Irreal.
+ * No navbar. No footer. Just the world.
+ */
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'The Irreal',
+  description = 'A navigable world of knowledge, creation, and becoming.'
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    /* The Irreal color palette - dark, atmospheric */
+    --void: #0a0a0f;
+    --deep: #12121a;
+    --surface: #1a1a24;
+    --muted: #2a2a36;
+    --text: #e0e0e8;
+    --text-dim: #8888a0;
+    --accent: #7c6fe0;
+    --accent-glow: #9d8fff;
+    --seedling: #4a9d6a;
+    --growing: #8d9d4a;
+    --evergreen: #4a8d9d;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--void);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  main {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: var(--accent-glow);
+  }
+
+  /* Typography for worlds */
+  .world-content {
+    max-width: 65ch;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .world-content h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--text);
+  }
+
+  .world-content h2 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+  }
+
+  .world-content p {
+    margin-bottom: 1rem;
+  }
+
+  /* Stage indicators */
+  .stage-seedling { color: var(--seedling); }
+  .stage-growing { color: var(--growing); }
+  .stage-evergreen { color: var(--evergreen); }
+</style>

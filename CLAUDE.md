@@ -44,6 +44,13 @@ Everything below serves this purpose. If an action doesn't serve it, don't take 
 | `docs/PLURALITY.md` | When building self-territories — structural plurality |
 | `docs/LEXICON.md` | When writing or naming — vocabulary and anti-terms |
 
+### Tier 4: Implementation & Execution
+| Document | Contains |
+|----------|----------|
+| `Creating the Irreal.md` | Full architecture + roadmap. Four-surface model (Forge/Soil/Gate/Membrane). Milestones. |
+| `DECISIONS.md` | Living decision log. Every architectural choice with rationale and guardrails. |
+| `research/PLATFORM-ARCHITECTURE-OPTIONS.md` | Platform research and trade-off analysis. |
+
 **Progressive disclosure**: Read what's needed for the current task. Don't load everything.
 
 ---
@@ -69,24 +76,37 @@ Everything below serves this purpose. If an action doesn't serve it, don't take 
 
 ## Technical Context
 
-**Target Stack** (from vision doc):
-- React Three Fiber (3D) or simpler spatial approach initially
-- Astro/Vite for static generation
-- MDX for content
-- Knowledge graph as navigation structure (not linear feeds)
-- TypeScript
+**Decided Stack** (from `Creating the Irreal.md`):
+- **Astro** as world-generator (static-first, islands for interactivity)
+- **MDX** for content (worlds as nodes with frontmatter)
+- **React** only in islands where it earns its keep
+- **TypeScript** throughout
+- **R3F** for 3D layer (optional, Layer B)
+
+**Four-Surface Model**:
+```
+FORGE    → private creation (Obsidian/editor)
+SOIL     → structured memory (worldIndex.json, graph.json)
+GATE     → canonical public site (The Irreal)
+MEMBRANE → social river (Sharkey, linking back)
+```
+
+**Two-Layer Protection** (anti-deadening):
+- **Layer A**: Always ships (2D, HTML, MDX) — never blocked
+- **Layer B**: Optional frosting (3D, artifacts) — never a gate
 
 **Content Architecture**:
-- Content as graph nodes, not pages
-- Connections are first-class (paths, not links)
+- Content as graph nodes in `/content/worlds/`
+- Connections derived from frontmatter + inline links
 - Growth states: seedling → growing → evergreen
-- Zone/self attribution on all content
+- Biome/self attribution on all content
 
 **Key Constraints**:
 - No navbar, menubar, footer, breadcrumbs
 - No blog chronology or folder hierarchy
-- Entry must feel like *crossing into*
-- Movement must feel like *travel*
+- Entry must feel like *crossing into* (Threshold)
+- Navigation via Mycelium Atlas (graph-first)
+- Publishing must never require dev work
 
 ---
 
@@ -108,14 +128,31 @@ From `soul-transmission.md`:
 ## Commands
 
 ```bash
-# Development (when scaffold exists)
-bun dev              # Local development server
-bun build            # Production build
-bun check            # Type checking
+# Development
+bun dev              # Local development server (http://localhost:4321)
+bun build            # Production build to /dist
+bun preview          # Preview production build
 
-# Content
-# Content lives in /content/nodes/ as MDX
-# Graph computed at build time from frontmatter connections
+# Content workflow
+# 1. Write world in /content/worlds/*.mdx
+# 2. Run `bun dev` — graph auto-regenerates
+# 3. See it in Threshold + Atlas
+```
+
+## Project Structure
+
+```
+/content/worlds/           # MDX worlds (the content)
+/src/
+  /pages/                  # Astro routes
+  /components/
+    /atlas/                # Graph UI island
+    /choices/              # CYOA choice UI
+    /artifacts/            # Interactive embeds
+  /lib/
+    build-graph.ts         # Parse links → graph.json
+    build-index.ts         # Generate worldIndex.json
+/public/data/              # Generated graph.json, worldIndex.json
 ```
 
 ---
@@ -134,18 +171,25 @@ bun check            # Type checking
 
 ## Current State
 
-The project has:
-- ✅ Core philosophical documentation (docs/*.md)
-- ✅ Vision document with technical direction
-- ✅ Soul transmission for context continuity
-- ✅ Keystone master artifact (full WorldOS architecture)
-- ✅ Ultimate Diegetic RPG paradigm document
+**Documentation** (complete):
+- ✅ Soul transmission, Keystone, Diegetic RPG (Being + paradigm)
+- ✅ Philosophy docs: FOUNDATIONS, PHENOMENOLOGY, FIRST_PRINCIPLES, ARCHITECTURE, PLURALITY, LEXICON
+- ✅ Implementation docs: Creating the Irreal.md, DECISIONS.md
 - ✅ CLAUDE.md for cross-session continuity
-- 🔲 Scaffold/site structure
-- 🔲 Content nodes (knowledge graph)
-- 🔲 Graph navigation implementation
-- 🔲 Atmospheric design
-- 🔲 3D spatial layer
+
+**Milestone 1: Germination** (in progress):
+- 🔲 Astro scaffold with content structure
+- 🔲 MDX world schema (frontmatter + connections)
+- 🔲 Graph generation (worldIndex.json, graph.json)
+- 🔲 Threshold page (place, not feed)
+- 🔲 Minimal Mycelium Atlas (clickable graph)
+- 🔲 1-3 seed worlds
+
+**Future Milestones**:
+- M2: Mycelium (Atlas as primary navigation)
+- M3: Game-feel (CYOA, flags, collectibles)
+- M4: Artifact Museum (interactive embeds)
+- M5: Aliveness (RSS, guestbook, federation)
 
 ---
 
