@@ -1,0 +1,161 @@
+---
+/**
+ * The Grove
+ * List view of all worlds. Fallback navigation when Atlas isn't enough.
+ * Organized by biome and stage.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const worlds = await getCollection('worlds', ({ data }) => !data.draft);
+
+// Group by biome
+const byBiome = worlds.reduce((acc, world) => {
+  const biome = world.data.biome || 'lore';
+  if (!acc[biome]) acc[biome] = [];
+  acc[biome].push(world);
+  return acc;
+}, {} as Record<string, typeof worlds>);
+
+const biomeNames: Record<string, string> = {
+  threshold: '🚪 Threshold',
+  lore: '📜 Lore',
+  creation: '🔨 Creation',
+  reflection: '🪞 Reflection',
+  play: '🎲 Play',
+  deep: '🌊 Deep',
+};
+
+const stageIcons: Record<string, string> = {
+  seedling: '🌱',
+  growing: '🌿',
+  evergreen: '🌲',
+};
+---
+
+<BaseLayout title="The Grove — The Irreal">
+  <div class="grove">
+    <header class="grove-header">
+      <a href="/" class="back">← Threshold</a>
+      <h1>The Grove</h1>
+      <p class="count">{worlds.length} worlds</p>
+    </header>
+
+    <div class="biomes">
+      {Object.entries(byBiome).map(([biome, biomeWorlds]) => (
+        <section class="biome">
+          <h2 class="biome-title">{biomeNames[biome] || biome}</h2>
+          <ul class="world-list">
+            {biomeWorlds.map((world) => (
+              <li class="world-item">
+                <a href={`/world/${world.data.id}`} class="world-link">
+                  <span class="stage-icon">{stageIcons[world.data.stage]}</span>
+                  <span class="world-title">{world.data.title}</span>
+                  {world.data.summary && (
+                    <span class="world-summary">{world.data.summary}</span>
+                  )}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+
+    {worlds.length === 0 && (
+      <div class="empty">
+        <p>No worlds yet. The garden awaits its first seeds.</p>
+      </div>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .grove {
+    min-height: 100vh;
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .grove-header {
+    margin-bottom: 3rem;
+  }
+
+  .back {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+  }
+
+  .back:hover {
+    color: var(--accent);
+  }
+
+  .grove-header h1 {
+    font-size: 2rem;
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+  }
+
+  .count {
+    color: var(--text-dim);
+  }
+
+  .biomes {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .biome-title {
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--muted);
+  }
+
+  .world-list {
+    list-style: none;
+  }
+
+  .world-item {
+    margin-bottom: 0.5rem;
+  }
+
+  .world-link {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+
+  .world-link:hover {
+    background: var(--muted);
+  }
+
+  .stage-icon {
+    flex-shrink: 0;
+  }
+
+  .world-title {
+    color: var(--text);
+  }
+
+  .world-summary {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    margin-left: auto;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-dim);
+  }
+</style>

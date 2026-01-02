@@ -1,0 +1,107 @@
+---
+/**
+ * Mycelium Atlas
+ * The primary navigation surface.
+ * Interactive graph showing all worlds and their connections.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Atlas from '../components/atlas/Atlas';
+import { getCollection } from 'astro:content';
+
+// Gather all worlds
+const worlds = await getCollection('worlds', ({ data }) => !data.draft);
+
+// Build graph data for the Atlas component
+const nodes = worlds.map(world => ({
+  id: world.data.id,
+  title: world.data.title,
+  biome: world.data.biome,
+  stage: world.data.stage,
+  summary: world.data.summary,
+}));
+
+// Extract edges from connections and choices
+const edges: Array<{ source: string; target: string }> = [];
+worlds.forEach(world => {
+  const id = world.data.id;
+
+  // From explicit connections
+  world.data.connections?.forEach(targetId => {
+    edges.push({ source: id, target: targetId });
+  });
+
+  // From choices
+  world.data.choices?.forEach(choice => {
+    // Extract id from path like "/world/some-id"
+    const match = choice.to.match(/\/world\/(.+)/);
+    if (match) {
+      edges.push({ source: id, target: match[1] });
+    }
+  });
+});
+
+const graphData = { nodes, edges };
+---
+
+<BaseLayout title="Mycelium Atlas — The Irreal">
+  <div class="atlas-page">
+    <header class="atlas-header">
+      <a href="/" class="back">← Threshold</a>
+      <h1>Mycelium Atlas</h1>
+    </header>
+
+    <div class="atlas-container">
+      <Atlas client:load graphData={graphData} />
+    </div>
+
+    <footer class="atlas-hint">
+      <p>Click a node to visit. Drag to explore. Scroll to zoom.</p>
+    </footer>
+  </div>
+</BaseLayout>
+
+<style>
+  .atlas-page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .atlas-header {
+    padding: 1rem 2rem;
+    background: var(--deep);
+    border-bottom: 1px solid var(--muted);
+    z-index: 10;
+  }
+
+  .back {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+  }
+
+  .atlas-header h1 {
+    font-size: 1.5rem;
+    font-weight: 300;
+  }
+
+  .atlas-container {
+    flex: 1;
+    position: relative;
+    background: var(--void);
+  }
+
+  .atlas-hint {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 10;
+  }
+</style>

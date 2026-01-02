@@ -1,5 +1,5 @@
 # THE IRREAL
-## A Navigable World of Knowledge, Creation, and Becoming
+## A Navigable World of Knowledge, Creation, and Becoming - something beyond reductive labels like "website"
 ## Design Vision & Architecture
 
 ---
