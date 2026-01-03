@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useThresholdStore } from '../../stores/thresholdStore';
@@ -10,6 +10,7 @@ interface VoidParticlesProps {
 
 export function VoidParticles({ count = 2000, radius = 50 }: VoidParticlesProps) {
   const pointsRef = useRef<THREE.Points>(null);
+  const geometryRef = useRef<THREE.BufferGeometry>(null);
   const stage = useThresholdStore((s) => s.stage);
   const mouseVelocity = useThresholdStore((s) => s.mouseVelocity);
   const stageStartTime = useThresholdStore((s) => s.stageStartTime);
@@ -38,13 +39,25 @@ export function VoidParticles({ count = 2000, radius = 50 }: VoidParticlesProps)
     return [pos, vel];
   }, [count, radius]);
 
+  // Set up buffer attribute on geometry
+  useEffect(() => {
+    if (geometryRef.current) {
+      geometryRef.current.setAttribute(
+        'position',
+        new THREE.BufferAttribute(positions, 3)
+      );
+    }
+  }, [positions]);
+
   // Breathing animation (60 BPM = 1 Hz)
   const breathPhase = useRef(0);
 
-  useFrame((state, delta) => {
-    if (!pointsRef.current) return;
+  useFrame((_, delta) => {
+    if (!pointsRef.current || !geometryRef.current) return;
+    const posAttr = geometryRef.current.attributes.position;
+    if (!posAttr) return;
 
-    const posArray = pointsRef.current.geometry.attributes.position.array as Float32Array;
+    const posArray = posAttr.array as Float32Array;
 
     // Breathing: expand/contract at 60 BPM
     breathPhase.current += delta * Math.PI * 2; // Full cycle per second
@@ -106,7 +119,7 @@ export function VoidParticles({ count = 2000, radius = 50 }: VoidParticlesProps)
       }
     }
 
-    pointsRef.current.geometry.attributes.position.needsUpdate = true;
+    posAttr.needsUpdate = true;
 
     // Update material opacity
     const material = pointsRef.current.material as THREE.PointsMaterial;
@@ -115,14 +128,7 @@ export function VoidParticles({ count = 2000, radius = 50 }: VoidParticlesProps)
 
   return (
     <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={count}
-          array={positions}
-          itemSize={3}
-        />
-      </bufferGeometry>
+      <bufferGeometry ref={geometryRef} />
       <pointsMaterial
         size={0.5}
         color="#7c6fe0"

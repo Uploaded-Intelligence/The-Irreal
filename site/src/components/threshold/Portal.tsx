@@ -20,7 +20,7 @@ export function Portal({ position, color, glowColor, label, hint, onClick }: Por
   // Breathing animation
   const breathPhase = useRef(Math.random() * Math.PI * 2);
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     if (!torusRef.current) return;
 
     // Breathing pulse
