@@ -1,11 +1,14 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { ParticleField } from '../components/threshold/ParticleField';
+import { EmergenceText } from '../components/threshold/EmergenceText';
 ---
 
 <BaseLayout title="The Irreal — Threshold">
   <ParticleField client:load />
-  <div>Test</div>
+  <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+    <EmergenceText client:load />
+  </div>
 </BaseLayout>
 
 <style>
