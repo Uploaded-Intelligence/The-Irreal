@@ -1,22 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { ThresholdExperience } from '../components/threshold/ThresholdExperience';
 ---
 
 <BaseLayout title="The Irreal — Threshold">
-  <div id="threshold-root"></div>
+  <div id="threshold-root">
+    <ThresholdExperience client:only="react" />
+  </div>
 </BaseLayout>
-
-<script>
-  import { createElement } from 'react';
-  import { createRoot } from 'react-dom/client';
-  import { ThresholdExperience } from '../components/threshold/ThresholdExperience';
-
-  // Mount React app
-  const root = document.getElementById('threshold-root');
-  if (root) {
-    createRoot(root).render(createElement(ThresholdExperience));
-  }
-</script>
 
 <style>
   #threshold-root {

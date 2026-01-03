@@ -1,4 +1,4 @@
-import { useRef, useMemo, useEffect } from 'react';
+import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useThresholdStore } from '../../stores/thresholdStore';
@@ -10,13 +10,12 @@ interface VoidParticlesProps {
 
 export function VoidParticles({ count = 2000, radius = 50 }: VoidParticlesProps) {
   const pointsRef = useRef<THREE.Points>(null);
-  const geometryRef = useRef<THREE.BufferGeometry>(null);
   const stage = useThresholdStore((s) => s.stage);
   const mouseVelocity = useThresholdStore((s) => s.mouseVelocity);
   const stageStartTime = useThresholdStore((s) => s.stageStartTime);
 
-  // Generate initial positions in a sphere around origin (camera will be at origin)
-  const [positions, velocities] = useMemo(() => {
+  // Generate geometry with positions
+  const { geometry, velocities } = useMemo(() => {
     const pos = new Float32Array(count * 3);
     const vel = new Float32Array(count * 3);
 
@@ -36,25 +35,17 @@ export function VoidParticles({ count = 2000, radius = 50 }: VoidParticlesProps)
       vel[i * 3 + 2] = (Math.random() - 0.5) * 0.02;
     }
 
-    return [pos, vel];
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    return { geometry: geo, velocities: vel };
   }, [count, radius]);
-
-  // Set up buffer attribute on geometry
-  useEffect(() => {
-    if (geometryRef.current) {
-      geometryRef.current.setAttribute(
-        'position',
-        new THREE.BufferAttribute(positions, 3)
-      );
-    }
-  }, [positions]);
 
   // Breathing animation (60 BPM = 1 Hz)
   const breathPhase = useRef(0);
 
   useFrame((_, delta) => {
-    if (!pointsRef.current || !geometryRef.current) return;
-    const posAttr = geometryRef.current.attributes.position;
+    if (!pointsRef.current) return;
+    const posAttr = geometry.attributes.position;
     if (!posAttr) return;
 
     const posArray = posAttr.array as Float32Array;
@@ -127,8 +118,7 @@ export function VoidParticles({ count = 2000, radius = 50 }: VoidParticlesProps)
   });
 
   return (
-    <points ref={pointsRef}>
-      <bufferGeometry ref={geometryRef} />
+    <points ref={pointsRef} geometry={geometry}>
       <pointsMaterial
         size={0.5}
         color="#7c6fe0"
