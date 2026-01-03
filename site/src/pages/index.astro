@@ -1,108 +1,26 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { ParticleField } from '../components/threshold/ParticleField';
-import { EmergenceText } from '../components/threshold/EmergenceText';
 ---
 
 <BaseLayout title="The Irreal — Threshold">
-  <ParticleField client:load />
-  <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
-    <EmergenceText client:load />
-  </div>
+  <div id="threshold-root"></div>
 </BaseLayout>
 
+<script>
+  import { createElement } from 'react';
+  import { createRoot } from 'react-dom/client';
+  import { ThresholdExperience } from '../components/threshold/ThresholdExperience';
+
+  // Mount React app
+  const root = document.getElementById('threshold-root');
+  if (root) {
+    createRoot(root).render(createElement(ThresholdExperience));
+  }
+</script>
+
 <style>
-  .threshold {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    background: radial-gradient(ellipse at center, var(--deep) 0%, var(--void) 70%);
-  }
-
-  .arrival {
-    text-align: center;
-    margin-bottom: 4rem;
-  }
-
-  .title {
-    font-size: 3rem;
-    font-weight: 300;
-    letter-spacing: 0.2em;
-    margin-bottom: 1rem;
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-glow) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .subtitle {
-    color: var(--text-dim);
-    font-size: 1.1rem;
-    font-weight: 300;
-  }
-
-  .portals {
-    display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .portal {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 3rem;
-    background: var(--surface);
-    border: 1px solid var(--muted);
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    text-decoration: none;
-  }
-
-  .portal:hover {
-    background: var(--muted);
-    border-color: var(--accent);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 32px rgba(124, 111, 224, 0.2);
-  }
-
-  .portal-icon {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .portal-label {
-    font-size: 1.2rem;
-    color: var(--text);
-    margin-bottom: 0.25rem;
-  }
-
-  .portal-hint {
-    font-size: 0.9rem;
-    color: var(--text-dim);
-  }
-
-  .whisper {
+  #threshold-root {
     position: fixed;
-    bottom: 2rem;
-    text-align: center;
-    color: var(--text-dim);
-    font-size: 0.9rem;
-    font-style: italic;
-    opacity: 0.6;
-  }
-
-  @media (max-width: 600px) {
-    .title {
-      font-size: 2rem;
-    }
-
-    .portals {
-      flex-direction: column;
-    }
+    inset: 0;
   }
 </style>
