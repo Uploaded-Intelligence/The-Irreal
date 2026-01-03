@@ -13,15 +13,21 @@
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",
     "@astrojs/react": "^4.0.0",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.5.0",
     "astro": "^5.0.0",
     "gsap": "^3.14.2",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "three": "^0.182.0",
+    "tone": "^15.1.22",
+    "zustand": "^5.0.9"
   },
   "devDependencies": {
     "@types/dom-view-transitions": "^1.0.6",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "@types/three": "^0.182.0",
     "typescript": "^5.7.0"
   }
 }
