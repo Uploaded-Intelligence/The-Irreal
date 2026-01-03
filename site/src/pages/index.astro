@@ -1,41 +1,11 @@
 ---
-/**
- * Threshold
- * The entry point to The Irreal.
- * A place, not a feed. A crossing, not a landing.
- */
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
-
-const worlds = await getCollection('worlds', ({ data }) => !data.draft);
-const worldCount = worlds.length;
+import { ParticleField } from '../components/threshold/ParticleField';
 ---
 
 <BaseLayout title="The Irreal — Threshold">
-  <div class="threshold">
-    <div class="arrival">
-      <h1 class="title">The Irreal</h1>
-      <p class="subtitle">A navigable world of knowledge, creation, and becoming</p>
-    </div>
-
-    <nav class="portals">
-      <a href="/atlas" class="portal atlas-portal">
-        <span class="portal-icon">🕸</span>
-        <span class="portal-label">Mycelium Atlas</span>
-        <span class="portal-hint">{worldCount} worlds to explore</span>
-      </a>
-
-      <a href="/grove" class="portal grove-portal">
-        <span class="portal-icon">🌲</span>
-        <span class="portal-label">The Grove</span>
-        <span class="portal-hint">All worlds, listed</span>
-      </a>
-    </nav>
-
-    <footer class="whisper">
-      <p>You have arrived. Look around. Where does your curiosity pull?</p>
-    </footer>
-  </div>
+  <ParticleField client:load />
+  <div>Test</div>
 </BaseLayout>
 
 <style>
