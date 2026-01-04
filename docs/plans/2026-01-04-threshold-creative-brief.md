@@ -525,4 +525,290 @@ site/public/
 
 ---
 
+## §11 AI ASSET PRODUCTION PIPELINE
+
+### Overview
+
+Modern creative technologists use AI-assisted pipelines to generate game-quality assets for immersive web experiences. This replaces traditional weeks-long asset creation with hours.
+
+**Pipeline**: `Imagen → Tripo AI → Blender (optional) → Three.js`
+
+### Phase 1: Concept Generation (Imagen/Gemini)
+
+**Goal**: Generate 2D reference art for portals, atmospheres, sacred geometry
+
+**Tools**: Google Imagen 3 / Gemini Image Generation
+
+**Outputs**:
+- Portal concept designs (multiple variations)
+- Void atmosphere references
+- Sacred geometry patterns
+- Particle/texture sprites
+- Color palette validation
+
+**Prompt Strategy** (for Imagen):
+```
+Structure: [Subject] + [Style references] + [Mood] + [Technical specs]
+
+Example prompts:
+
+PORTAL CONCEPTS:
+"Organic portal gateway, Orokin aesthetic from Warframe, gold and deep purple
+bioluminescent edges, Art Nouveau ornamental frame, Moebius dreamscape influence,
+ethereal void visible through aperture, front view, concept art, 16:9"
+
+VOID ATMOSPHERE:
+"Cosmic void with floating sacred geometry, vesica piscis and golden spirals,
+bioluminescent particles like spores, Numenera aesthetic, vast scale,
+melancholy wonder not horror, John Harris influence, 16:9"
+
+TEXTURE SPRITES:
+"Soft glow particle sprite, bioluminescent spore, ethereal teal and amethyst,
+transparent background, centered, sprite sheet ready, 1:1"
+
+SACRED GEOMETRY:
+"Intricate sacred geometry mandala, gold lines on void black, vesica piscis
+nested circles, Art Deco precision meets organic flow, Monstress detail level,
+transparent background, 1:1"
+```
+
+### Phase 2: 2D → 3D Conversion (Tripo AI)
+
+**Goal**: Convert concept art to 3D models
+
+**Tool**: [Tripo AI](https://www.tripo3d.ai/) (Image-to-3D in ~10 seconds)
+
+**Workflow**:
+1. Upload best Imagen portal concept
+2. Generate 3D model (automatic)
+3. Use "Build and Refine" for retopology
+4. Export as GLB (web-optimized)
+
+**Settings**:
+- Enable PBR materials
+- Request clean topology
+- Set appropriate poly count for web
+
+**Outputs**:
+- `portal-grove.glb` — The Grove portal 3D model
+- `portal-atlas.glb` — The Atlas portal 3D model
+- `sacred-geometry.glb` — Floating geometry elements
+
+### Phase 3: Texture Generation (Imagen)
+
+**Goal**: Generate textures for particles, noise, glows
+
+**Types needed**:
+```
+1. PARTICLE SPRITES
+   - Soft glow sprites (various sizes)
+   - Spore/dust particles
+   - Star/distant light particles
+
+2. NOISE TEXTURES
+   - Void noise (for depth)
+   - Atmospheric haze
+   - Film grain overlay
+
+3. PORTAL INTERIORS
+   - Grove preview texture (warm, organic)
+   - Atlas preview texture (cool, network)
+```
+
+**Export specs**:
+- PNG with transparency where needed
+- Powers of 2 dimensions (512x512, 1024x1024)
+- Seamless tiling for noise textures
+
+### Phase 4: Animation References (Veo)
+
+**Goal**: Generate video references for transitions and effects
+
+**Tool**: Google Veo 3.1
+
+**Uses**:
+- Portal opening/closing animation reference
+- Crossing transition effect reference
+- Particle flow patterns
+- Can be used as video textures in Three.js
+
+**Prompt examples**:
+```
+"Portal aperture opening like an eye, organic iris, gold and purple
+bioluminescent edges, void visible inside, smooth 2 second animation"
+
+"Particles rushing past camera, entering portal, speed lines but organic,
+ethereal teal and amethyst, first person perspective"
+```
+
+### Phase 5: Refinement (Blender - Optional)
+
+**When needed**:
+- Tripo output needs topology cleanup
+- Combining multiple 3D elements
+- Baking complex materials to simple textures
+- Creating animation-ready rigs
+
+**Blender workflow**:
+1. Import GLB from Tripo
+2. Decimate/retopologize if needed
+3. Repack UVs
+4. Bake textures (normals, AO)
+5. Export clean GLB for Three.js
+
+### Phase 6: Web Integration (Three.js)
+
+**Load assets**:
+```typescript
+import { useGLTF } from '@react-three/drei';
+
+// Load portal model
+const portalModel = useGLTF('/assets/portal-grove.glb');
+
+// Load particle texture
+const particleTexture = useTexture('/assets/particle-sprite.png');
+
+// Load noise for atmosphere
+const noiseTexture = useTexture('/assets/void-noise.png');
+```
+
+**Apply to existing components**:
+- Replace `<torusGeometry>` with loaded GLB models
+- Replace `<pointsMaterial>` with textured sprites
+- Add noise textures to fog shaders
+
+---
+
+## §12 IMAGEN PROMPT LIBRARY
+
+### Portal Concepts
+
+```
+GROVE PORTAL (organic, warm):
+"Organic portal gateway shaped like opening flower or eye, ornate frame
+with root-like tendrils and Art Nouveau curves, warm gold and arterial
+rose bioluminescent edges, interior shows soft green-gold light,
+Warframe Orokin meets Monstress Art Deco, concept art, front view, 16:9"
+
+ATLAS PORTAL (geometric, cool):
+"Constellation portal gateway, geometric but organic frame, interconnected
+nodes like neural network, ethereal teal and moonlit silver edges,
+interior shows star map and connection threads, Destiny Dreaming City
+aesthetic, concept art, front view, 16:9"
+
+PORTAL FRAME DETAIL:
+"Close-up of ornate portal frame detail, gold metal with organic curves,
+bioluminescent veins, ancient technology aesthetic, Numenera influence,
+weathered but beautiful, macro photography style, 1:1"
+```
+
+### Void Atmospheres
+
+```
+DEEP VOID:
+"Vast cosmic void with distant organic lights, sacred geometry faintly
+visible, vesica piscis and nested circles, deep purple and teal
+bioluminescence, John Harris scale, Simon Stålenhag melancholy,
+volumetric fog layers, 16:9"
+
+PARTICLE FIELD:
+"Field of floating bioluminescent particles, various scales from dust
+to distant stars, organic movement implied, void black background,
+ethereal teal and amethyst colors, dreamlike atmosphere, 16:9"
+```
+
+### Textures
+
+```
+PARTICLE SPRITE (with transparency):
+"Single soft glow particle, bioluminescent orb, ethereal gradient from
+teal center to transparent edge, sprite for game engine, centered,
+transparent background, 512x512"
+
+NOISE TEXTURE (seamless):
+"Seamless tileable noise texture, organic cloud-like patterns, very dark
+with subtle variation, for volumetric fog, monochrome, 1024x1024"
+
+SACRED GEOMETRY OVERLAY:
+"Intricate sacred geometry pattern, thin gold lines, vesica piscis and
+golden spiral, very subtle, for overlay effect, dark background with
+slight transparency, 1024x1024"
+```
+
+### Style Modifiers
+
+Add these to any prompt for consistency:
+```
+AESTHETIC: "Warframe Orokin, Numenera, Moebius, Monstress Art Deco"
+MOOD: "awe and ancient mystery, NOT horror, melancholy wonder"
+COLORS: "Orokin gold (#c9a227), deep amethyst (#7c6fe0), ethereal teal (#4a8d9d)"
+QUALITY: "concept art quality, high detail, professional"
+```
+
+---
+
+## §13 ASSET CHECKLIST
+
+### 3D Models (via Tripo AI)
+- [ ] Grove Portal frame (GLB)
+- [ ] Atlas Portal frame (GLB)
+- [ ] Sacred geometry floating elements (GLB)
+- [ ] Optional: environmental pieces
+
+### Textures (via Imagen)
+- [ ] Particle sprite - soft glow (PNG, transparent)
+- [ ] Particle sprite - spore (PNG, transparent)
+- [ ] Particle sprite - distant star (PNG, transparent)
+- [ ] Void noise texture (PNG, seamless)
+- [ ] Film grain overlay (PNG, subtle)
+- [ ] Sacred geometry overlay (PNG, transparent)
+- [ ] Grove portal interior preview (PNG/video)
+- [ ] Atlas portal interior preview (PNG/video)
+
+### Video References (via Veo - optional)
+- [ ] Portal opening animation reference
+- [ ] Crossing transition reference
+- [ ] Particle flow pattern reference
+
+### Audio (via Tone.js generation or sourced)
+- [ ] Sub-bass drone (generative)
+- [ ] Crystallization sound effect
+- [ ] Portal ambient bleed
+- [ ] Crossing whoosh
+
+---
+
+## §14 REVISED IMPLEMENTATION PHASES
+
+### Phase 0: Asset Generation (NEW - Do First)
+**Duration**: 1-2 hours
+1. Generate portal concepts in Imagen (5-10 variations each)
+2. Select best concepts
+3. Run through Tripo AI → GLB models
+4. Generate texture sprites in Imagen
+5. Export all assets to `/site/public/assets/`
+
+### Phase 1: Void & Particles (Updated)
+- Load particle sprite textures (replace hard circles)
+- Implement multi-scale particle system
+- Add volumetric fog with noise texture
+- Add sacred geometry overlay
+
+### Phase 2: Typography Crystallization
+- (unchanged from original plan)
+
+### Phase 3: Portal Redesign (Updated)
+- Load GLB portal models (replace torus geometry)
+- Apply generated textures
+- Add interior preview shaders
+- Implement hover/breathing animations
+
+### Phase 4: Crossing Transition
+- (unchanged from original plan)
+
+### Phase 5: Sound Design
+- (unchanged from original plan)
+
+---
+
 **Ready for implementation approval.**
