@@ -8,18 +8,24 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check"
+    "check": "astro check",
+    "summon": "tsx scripts/summon.ts",
+    "new": "tsx scripts/summon.ts",
+    "plant": "tsx scripts/plant.ts"
   },
   "dependencies": {
-    "astro": "^5.0.0",
     "@astrojs/mdx": "^4.0.0",
     "@astrojs/react": "^4.0.0",
+    "astro": "^5.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@clack/prompts": "^0.11.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "chalk": "^5.6.2",
+    "tsx": "^4.21.0",
     "typescript": "^5.7.0"
   }
 }
