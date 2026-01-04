@@ -12,6 +12,9 @@ export default defineConfig({
   vite: {
     optimizeDeps: {
       exclude: ['@resvg/resvg-js']
+    },
+    ssr: {
+      noExternal: ['three', '@react-three/fiber', '@react-three/drei']
     }
   }
 });
