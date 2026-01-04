@@ -6,6 +6,7 @@
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
+import { BIOMES } from '../../lib/biomes';
 
 export async function getStaticPaths() {
   const worlds = await getCollection('worlds');
@@ -24,13 +25,10 @@ const stageLabels: Record<string, string> = {
   evergreen: '🌲 Evergreen',
 };
 
-const biomeLabels: Record<string, string> = {
-  threshold: '🚪 Threshold',
-  lore: '📜 Lore',
-  creation: '🔨 Creation',
-  reflection: '🪞 Reflection',
-  play: '🎲 Play',
-  deep: '🌊 Deep',
+// Biome labels derived from central config
+const getBiomeLabel = (id: string) => {
+  const biome = BIOMES[id as keyof typeof BIOMES];
+  return biome ? `${biome.icon} ${biome.label}` : id;
 };
 ---
 
@@ -51,7 +49,7 @@ const biomeLabels: Record<string, string> = {
         <span class={`stage stage-${world.data.stage}`}>
           {stageLabels[world.data.stage]}
         </span>
-        <span class="biome">{biomeLabels[world.data.biome]}</span>
+        <span class="biome">{getBiomeLabel(world.data.biome)}</span>
         {world.data.self && (
           <span class="self">by {world.data.self}</span>
         )}

@@ -12,17 +12,9 @@ import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { exec } from 'child_process';
 import { fileURLToPath } from 'url';
+import { BIOMES } from '../src/lib/biomes.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-const BIOMES = {
-  threshold: { icon: '🚪', desc: 'Entry points, portals, beginnings' },
-  lore: { icon: '📜', desc: 'Stories, histories, myths' },
-  creation: { icon: '🔨', desc: 'Things you made, processes, builds' },
-  reflection: { icon: '🪞', desc: 'Inner work, thoughts, meta' },
-  play: { icon: '🎲', desc: 'Games, experiments, fun' },
-  deep: { icon: '🌊', desc: 'Philosophy, the heavy stuff' },
-};
 
 const STAGES = {
   seedling: { icon: '🌱', desc: 'Just sprouting - rough, incomplete, alive' },
@@ -127,7 +119,7 @@ async function main() {
           message: 'Which biome does it belong to?',
           options: Object.entries(BIOMES).map(([key, val]) => ({
             value: key,
-            label: `${val.icon} ${key.charAt(0).toUpperCase() + key.slice(1)}`,
+            label: `${val.icon} ${val.label}`,
             hint: val.desc,
           })),
         }),

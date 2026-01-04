@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { BIOME_IDS } from './lib/biomes';
 
 /**
  * World Schema
@@ -12,8 +13,8 @@ const worldSchema = z.object({
   title: z.string(),
   summary: z.string().optional(),
 
-  // Classification
-  biome: z.enum(['threshold', 'lore', 'creation', 'reflection', 'play', 'deep']).default('lore'),
+  // Classification - biomes defined in src/lib/biomes.ts
+  biome: z.enum(BIOME_IDS as [string, ...string[]]).default('lore'),
   stage: z.enum(['seedling', 'growing', 'evergreen']).default('seedling'),
   self: z.string().optional(), // Which Self authored this
 
