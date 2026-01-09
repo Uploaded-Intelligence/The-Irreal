@@ -612,15 +612,18 @@ VR provides:
    │         │                        │                        │                │
    │         ▼                        ▼                        ▼                │
    │   ┌───────────┐          ┌───────────┐          ┌───────────┐             │
-   │   │ WORLD-OS  │          │  SIGNAL   │          │   ALLY    │             │
-   │   │ INFRA     │◄────────►│  DOCK     │◄────────►│  NETWORK  │             │
+   │   │ WORLD-OS  │          │  Outward  │          │   ALLY    │             │
+   │   │ INFRA     │◄────────►│  Irreal   │◄────────►│  NETWORK  │             │
    │   │           │          │           │          │           │             │
    │   │ VR space  │          │ Public    │          │ Find kin  │             │
    │   │ Time-GPS  │          │ creations │          │ Connect   │             │
    │   │ Pipelines │          │ witnessed │          │ Sympoiese │             │
    │   └─────┬─────┘          └─────┬─────┘          └─────┬─────┘             │
-   │         │                      │                      │                    │
-   │         │    INTERCONNECTIONS: │                      │                    │
+   │         │                      |                      | 
+
+|  INWARD IRREAL: everything transmuted into inner-facing lore, mythopoietics, arcs |
+                            │                    │
+   │         │    INTERCONNECTIONS:                       │                    │
    │         │    Everything feeds everything              │                    │
    │         │    Progress here opens paths there          │                    │
    │         │    The whole system IS the epic arc         │                    │
