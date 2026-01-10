@@ -22,10 +22,26 @@
 | **Monstress** | Art Deco + Asian influences, Rococo lushness, "heart-stoppingly beautiful" intricate detail |
 | **Stellaris** | Precursor megastructures, cosmic-scale archaeological discovery, system-spanning constructs |
 | **LANCER (HORUS)** | Paracausal technology, "occult artifacts not hardware", mythopoetic naming, reality-bending |
+| **The Culture** (Iain M. Banks) | Vast playful AI Minds, orbital megastructures, post-scarcity whimsy, names as poetry, benevolent cosmic intelligence |
+| **Pantheon S2** | Uploaded consciousness as narrative, digital afterlife, what remains of personhood when embodiment dissolves |
+| **Fate/Grand Order** | Cosmic-scale mythological tapestry, Servants as living archetypes, grand historical collisions, epic summoning aesthetics |
+| **VRChat Worlds** | "Anything goes" chaos energy, identity fluidity, user-created universes, playful surrealism, avatar as self-expression |
+| **Discworld** | Meta-aware wit, doesn't take itself too seriously, narrative causality, satire with heart, footnotes as worldbuilding |
+| **Bruno Simon Portfolio** | 3D web-as-world precedent, portfolio as explorable space, Three.js interactive navigation, playful discoverability |
 
 ---
 
-## §1.1 REFERENCE ART LINKS
+## §1.2 TONAL BALANCE
+
+> **The Irreal walks a line**: Cosmic grandeur that can suddenly undercut itself with wit. Awe that knows when to wink. Ancient mystery wearing a party hat (occasionally).
+
+This is NOT ironic detachment. It's the confidence of something so vast it can afford to be playful. Like a Culture Mind naming itself *Funny Only Once* or a Discworld footnote explaining the metaphysics of narrativium.
+
+**When in doubt**: Would this make a Culture Mind chuckle while simultaneously running a civilization?
+
+---
+
+## §1.3 REFERENCE ART LINKS
 
 ### Warframe (Orokin / Void / Duviri)
 - **Art Deep Dive**: https://www.warframe.com/news/tennocon-2024-artists-deep-dive
@@ -101,7 +117,10 @@
 4. **Spiritual/transcendent** — crossing into something MORE real
 5. **Melancholy wonder** — beauty intertwined with loss/longing
 6. **Paracausal** — technology/magic distinction dissolved
-7. **NOT horror** — awe, mystery, reverence
+7. **Playful grandeur** — cosmic awe that can wink at itself (Culture/Discworld energy)
+8. **Identity fluidity** — consciousness as mutable, plural, exploratory (Pantheon/VRChat)
+9. **Meta-awareness** — knows it's a world, invites you to know too
+10. **NOT horror** — awe, mystery, reverence
 
 ---
 
