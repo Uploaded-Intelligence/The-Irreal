@@ -521,6 +521,252 @@ Create: `/site/src/lib/creative-tech/CREDITS.md`
 
 ---
 
+## GPGPU & Fluid Simulation
+
+### 1. amandaghassaei/FluidSimulation
+**URL:** https://github.com/amandaghassaei/FluidSimulation
+**Demo:** https://apps.amandaghassaei.com/FluidSimulation
+**Key Features:**
+- Mixed grid-particle fluid simulation
+- Cursor-responsive forces
+- WebGL shader-based
+
+---
+
+### 2. squarefeet/ShaderParticleEngine
+**URL:** https://github.com/squarefeet/ShaderParticleEngine
+**Key Features:**
+- GPU-based particle effects
+- Built for THREE.js
+- Frees up CPU cycles
+
+---
+
+### 3. mharrys/fluids-2d
+**URL:** https://github.com/mharrys/fluids-2d
+**Key Features:**
+- Real-time fluid dynamics on GPU
+- Three.js integration
+
+---
+
+### 4. amsXYZ/three-fluid-sim
+**URL:** https://github.com/amsXYZ/three-fluid-sim
+**Key Features:**
+- 2D fluid simulation
+- References GPU Gems Chapter 38
+- Based on Pavel Dobryakov's WebGL-Fluid-Simulation
+
+---
+
+### 5. poeti8/one-million-particles
+**URL:** https://github.com/poeti8/one-million-particles
+**Key Features:**
+- **1,000,000 GPGPU particles**
+- All animations with Three.js
+- Performance benchmark reference
+
+---
+
+## Custom Shader Materials
+
+### 1. FarazzShaikh/THREE-CustomShaderMaterial
+**URL:** https://github.com/FarazzShaikh/THREE-CustomShaderMaterial
+**License:** MIT
+**Key Features:**
+- Extend Three.js standard materials with custom shaders
+- Supports Vanilla AND React
+- Version 6.4.0
+
+**Note:** Lamina is built on top of this library.
+
+---
+
+### 2. Three.js Shading Language (TSL)
+**URL:** https://github.com/mrdoob/three.js/wiki/Three.js-Shading-Language
+**Key Features:**
+- Easy environment for shader creation
+- Renderer-agnostic
+- Node-based abstraction
+
+**Use case:** Modern approach to custom shaders in Three.js
+
+---
+
+## Portal & Transition Effects
+
+### 1. MisterPrada/vortex-glass-sphere
+**URL:** https://github.com/MisterPrada/vortex-glass-sphere
+**Key Features:**
+- Procedural vortex in glass sphere
+- Uses Three.js Shader Language (TSL)
+- 2D shader → texture effects → particles → glass material
+- Step-by-step tutorial
+
+**Use case:** Portal entrance effect
+
+---
+
+### 2. sctlcd/threejs-sci-fi-portal-effect
+**URL:** https://github.com/sctlcd/threejs-sci-fi-portal-effect
+**Key Features:**
+- Animated 3D sci-fi portal
+- Desktop-focused
+
+---
+
+### 3. zadvorsky/three.portals
+**URL:** https://github.com/zadvorsky/three.portals
+**Key Features:**
+- Portal implementation in THREE.js
+- In-scene "window" to different part of virtual world
+
+**Conceptual Note (from Medium article):**
+> "A portal is a kind of in-scene 'window' which displays a view into a different part of the virtual world. It has a 'local/source' end close to the player, and a 'remote/destination' end."
+
+---
+
+### 4. Dissolve Effects
+**Repos:**
+- [magnuswahlstrand/demo-r3f-dissolve-shader](https://github.com/magnuswahlstrand/demo-r3f-dissolve-shader) — R3F dissolve shader
+- [kekkorider/flame-dissolve-shader](https://github.com/kekkorider/patreon-tutorial-flame-dissolve-shader) — Flamy dissolve
+
+**Tutorial:**
+- [Codrops: Dissolve Effect with Shaders and Particles](https://tympanus.net/codrops/2025/02/17/implementing-a-dissolve-effect-with-shaders-and-particles-in-three-js/)
+
+**Technique:**
+- Perlin noise creates continuous dissolve pattern
+- Natural-looking transitions
+- Works with particles for "evaporation" effect
+
+---
+
+### 5. GL Transitions
+**URL:** https://gl-transitions.com/
+**Key Features:**
+- Collection of WebGL transitions
+- Can be used with various frameworks
+- Mix and match for custom effects
+
+---
+
+## Glass & Refraction Materials
+
+### 1. MeshPhysicalMaterial (Built-in)
+**Location:** Three.js core
+**Key Properties:**
+```js
+{
+  roughness: 0,      // Smooth surface
+  transmission: 1,   // Fully transmissive
+  thickness: 2,      // Creates magnifying effect
+  ior: 1.5          // Index of Refraction (glass ~1.5, diamond ~2.4)
+}
+```
+
+**Note:** Higher performance cost per pixel, but effects are disabled by default.
+
+---
+
+### 2. MeshTransmissionMaterial (Drei)
+**Location:** `@react-three/drei`
+**Key Features:**
+- Layers shaders on top of MeshPhysicalMaterial
+- More control over refraction effects
+- Built for R3F
+
+**IOR (Index of Refraction):**
+- Lower IOR = less refraction
+- Higher IOR = more distortion/depth (glass, diamonds)
+
+---
+
+### 3. sachinmotwani02/refractive-fractal-glass-effect
+**URL:** https://github.com/sachinmotwani02/refractive-fractal-glass-effect
+**Key Features:**
+- React + Three.js + R3F
+- Dynamic chromatic aberration
+- Interactive controls for transmission, thickness, roughness, IOR
+
+**Use case:** The morphin blobs could use glass-like transmission for that liquid feel.
+
+---
+
+### 4. Codrops: Real-time Multiside Refraction
+**URL:** https://tympanus.net/codrops/2019/10/29/real-time-multiside-refraction-in-three-steps/
+**Key Features:**
+- Custom shader approach
+- Fresnel equation for reflected/refracted ratio
+- Critical angle calculations
+
+---
+
+## Mirror & Recursion Effects
+
+### THREE.Reflector (Built-in)
+**Location:** `three/addons/objects/Reflector`
+**Limitations:**
+- Recursion capped at 3 reflections
+- Performance degrades with multiple mirrors
+- Each reflection requires scene re-render
+
+**Use case:** Portal frame reflections (limited use)
+
+---
+
+## Audio Visualization
+
+### 1. dcyoung/r3f-audio-visualizer
+**URL:** https://github.com/dcyoung/r3f-audio-visualizer
+**Demo:** https://dcyoung.github.io/r3f-audio-visualizer/
+**Key Features:**
+- Interactive audio visualizer
+- React + THREE.js
+- R3F native
+
+---
+
+### 2. AskAlice/react-three-midi
+**URL:** https://github.com/AskAlice/react-three-midi
+**Key Features:**
+- MIDI and audio analysis
+- React-three-fiber integration
+
+---
+
+### 3. Codrops: Audio-Reactive Visuals Tutorial
+**URL:** https://tympanus.net/codrops/2023/12/19/creating-audio-reactive-visuals-with-dynamic-particles-in-three-js/
+**Key Features:**
+- Sync visuals with audio frequencies and tempo
+- BPM detection with `web-audio-beat-detector`
+- Procedural particle animations
+
+**Relevance:** The Irreal already uses Tone.js for audio — this could sync metaballs with the 40Hz→110Hz drone.
+
+---
+
+## Environment & Lighting
+
+### drei Environment Component
+**Location:** `@react-three/drei`
+**Key Features:**
+- HDRI environment maps
+- Image-based lighting (IBL)
+- Pre-filtered roughness mipmaps (PMREM)
+
+**Usage:**
+```jsx
+import { Environment } from '@react-three/drei'
+
+<Environment preset="sunset" background />
+// Or with custom HDRI:
+<Environment files="path/to/your.hdr" />
+```
+
+**Presets available:** sunset, dawn, night, warehouse, forest, apartment, studio, city, park, lobby
+
+---
+
 ## Research Sources
 
 - [Codrops Three.js Tag](https://tympanus.net/codrops/tag/three-js/)
