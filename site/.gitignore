@@ -28,3 +28,4 @@ yarn-error.log*
 public/data/graph.json
 public/data/worldIndex.json
 .vercel
+.env*.local
