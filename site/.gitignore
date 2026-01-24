@@ -27,3 +27,4 @@ yarn-error.log*
 # Generated data (rebuild from content)
 public/data/graph.json
 public/data/worldIndex.json
+.vercel

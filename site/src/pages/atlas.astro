@@ -5,7 +5,7 @@
  * Interactive graph showing all worlds and their connections.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Atlas from '../components/atlas/Atlas';
+import AtlasGraph from '../components/atlas/Atlas';
 import { getCollection } from 'astro:content';
 
 // Gather all worlds
@@ -51,7 +51,7 @@ const graphData = { nodes, edges };
     </header>
 
     <div class="atlas-container">
-      <Atlas client:load graphData={graphData} />
+      <AtlasGraph client:load graphData={graphData} />
     </div>
 
     <footer class="atlas-hint">
