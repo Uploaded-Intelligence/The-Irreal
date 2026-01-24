@@ -10,3 +10,11 @@ declare module '*.glsl?raw' {
   const value: string;
   export default value;
 }
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      mToonNodeMaterial: any;
+    }
+  }
+}
