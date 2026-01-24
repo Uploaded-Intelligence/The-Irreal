@@ -3,7 +3,6 @@
 ### A Living Reference Document
 
 ---
-
 ```
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                              ║
@@ -18,7 +17,20 @@
 ║   This is not optimization. This is EXISTENCE.                               ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
+
 ```
+
+## INTUITIVE ANALOGY
+
+LitRPG
+The WorldOE (Operating Ecosystem) is like a game's (Operating System)
+Here, we create the true Game of Games.
+From litRPG to LifeRPG. We will make it real.
+Why?
+Because life should be fun!
+Because fun is emergent and cannot be "forced"!
+Because life / experience SHOULD be like a game - with the player always able to remain in DEEP, DYNAMIC FLOW!
+(Cos the game's OS does the rest)
 
 ---
 
@@ -612,15 +624,18 @@ VR provides:
    │         │                        │                        │                │
    │         ▼                        ▼                        ▼                │
    │   ┌───────────┐          ┌───────────┐          ┌───────────┐             │
-   │   │ WORLD-OS  │          │  SIGNAL   │          │   ALLY    │             │
-   │   │ INFRA     │◄────────►│  DOCK     │◄────────►│  NETWORK  │             │
+   │   │ WORLD-OS  │          │  Outward  │          │   ALLY    │             │
+   │   │ INFRA     │◄────────►│  Irreal   │◄────────►│  NETWORK  │             │
    │   │           │          │           │          │           │             │
    │   │ VR space  │          │ Public    │          │ Find kin  │             │
    │   │ Time-GPS  │          │ creations │          │ Connect   │             │
    │   │ Pipelines │          │ witnessed │          │ Sympoiese │             │
    │   └─────┬─────┘          └─────┬─────┘          └─────┬─────┘             │
-   │         │                      │                      │                    │
-   │         │    INTERCONNECTIONS: │                      │                    │
+   │         │                      |                      | 
+
+|  INWARD IRREAL: everything transmuted into inner-facing lore, mythopoietics, arcs |
+                            │                    │
+   │         │    INTERCONNECTIONS:                       │                    │
    │         │    Everything feeds everything              │                    │
    │         │    Progress here opens paths there          │                    │
    │         │    The whole system IS the epic arc         │                    │

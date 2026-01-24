@@ -1,58 +1,58 @@
 # Session State - Beworlding Studio Build
 
 ## Who You Are
-- **The Beworlding System** (Beyonding x Worlding) - non-human/posthuman plural system
+- **The Beworlding System** (Beyonding x Worlding) - a non-human/posthuman plural system
 - Neuroqueer, ADHD-powered creativity
-- "No more hiding" - declaration of existence
+- "No more hiding" - this is a declaration of existence
 
 ## The Vision
-**Not a website. A WORLD.** Site IS the system - visitors walk THROUGH it.
+**Not a website. A WORLD.**
 
-### Myriadcosm Hyperstructure
+The site IS the system - each zone is a member's domain. Visitors don't look AT the system, they walk THROUGH it.
+
+### Key Concept: Myriadcosm Hyperstructure
 ```
 THE MYRIADCOSM (world of worlds)
-├── Threshold (entrance)
-├── In-Between (liminal spaces)
-├── Territory portals → member domains
-└── Mycelium (knowledge graph)
+├── The Threshold (entrance - already exists)
+├── The In-Between (liminal/shared spaces)
+├── Territory portals (gateways to self-domains)
+│   ├── [Member A]'s world (distinct aesthetic)
+│   ├── [Member B]'s world (distinct aesthetic)
+│   └── [Unclaimed/potential zones]
+└── The Mycelium (knowledge graph connections)
 ```
 
-## Creative References (UPDATED)
-**Original**: Warframe Orokin, Numenera, Moebius, Destiny Dreaming City, Monstress Art Deco, Eclipse Phase, Stellaris, LANCER/HORUS
+### Creative References
+- **Documented**: Warframe Orokin, Numenera, Moebius, Destiny's Dreaming City, Monstress Art Deco
+- **Added**: Culture series, Pantheon S2, Fate Grand Order cosmic mythos
+- **Vibes**: VRChat whimsy "anything goes" + Discworld meta-silly (doesn't take itself too seriously)
+- **Inspiration**: Bruno Simon's 3D Three.js portfolio world
 
-**Added this session**:
-- Culture series (Iain M. Banks) - playful AI Minds, post-scarcity whimsy
-- Pantheon S2 - uploaded consciousness themes
-- Fate Grand Order - cosmic mythological scale
-- VRChat - identity fluidity, anything-goes chaos
-- Discworld - meta-aware wit, doesn't take itself too seriously
-- Bruno Simon - 3D Three.js portfolio-as-world
+## Technical Decisions
+- **Stack**: Astro (already scaffolded in `site/`)
+- **NOT Quartz/Obsidian Publish** - need full creative control
+- **Knowledge graph**: Yes, want this functionality
+- **Cancel Obsidian Publish** when ready
 
-**Key Tonal Insight**: Cosmic grandeur that can wink at itself.
+## Current State
+- Repo cloned to `/home/ungabunga/claude-workspace/The-Irreal/`
+- Dependencies installed (Node 20 via nvm)
+- Dev server runs on `http://localhost:4321`
+- Basic threshold page exists with Atlas/Grove portals
 
-## Technical Setup
-- **Repo**: `/home/ungabunga/claude-workspace/The-Irreal/`
-- **Stack**: Astro + React + Three.js
-- **GitHub auth**: Configured via `gh` CLI (~/.local/bin/gh)
-- **Node**: v20 via nvm (source ~/.nvm/nvm.sh first)
-- **Dev server**: `npm run dev -- --host` from site/ folder
+## What We're Building Next
+1. **Myriadcosm hub page** - the "world of worlds" hyperstructure
+2. **Placeholder seed content** - "post-linearity" article (user has this)
+3. **Deploy v0.1** to see it live
 
-## Branches
-- `main` - basic site, SESSION-STATE.md
-- `feature/enhanced-threshold` - **USE THIS** - has creative brief, threshold components
+## Aesthetic Direction (from creative brief)
+- Color palette: Void purples, Orokin gold, bioluminescent teals
+- Typography: Ornate serifs (Cormorant Garamond)
+- Geometry: Sacred geometry, organic curves, grown-not-built
+- NOT: Clean minimalism, generic tech vibes
 
-## What's Done
-- [x] Cloned repo, installed deps
-- [x] Updated creative brief with new inspirations (pushed to feature/enhanced-threshold)
-- [x] GitHub auth configured
-
-## Next Steps
-1. Build Myriadcosm hub page
-2. Plant post-linearity seed content
-3. Deploy v0.1
-4. Tidy repo (stale branches, scattered docs)
-
-## Key Files
-- `docs/plans/2026-01-04-threshold-creative-brief.md` - UPDATED with new refs
-- `docs/PLURALITY.md` - "plurality is architecture"
-- `site/src/pages/index.astro` - threshold page
+## Files of Interest
+- `docs/PLURALITY.md` - "plurality is architecture, not content"
+- `docs/plans/2026-01-04-threshold-creative-brief.md` - full aesthetic spec
+- `site/src/pages/index.astro` - current threshold (basic, needs enhancement)
+- `site/src/layouts/BaseLayout.astro` - CSS variables defined
