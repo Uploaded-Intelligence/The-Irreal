@@ -521,6 +521,99 @@ Create: `/site/src/lib/creative-tech/CREDITS.md`
 
 ---
 
+## Procedural Noise
+
+### 1. jeromeetienne/threex.noiseshadermaterial
+**URL:** https://github.com/jeromeetienne/threex.noiseshadermaterial
+**License:** MIT
+**Key Features:**
+- ShaderMaterial preconfigured for 3D noise
+- Fully procedural (perlin3d)
+- Volumetric cloud example
+
+---
+
+### 2. FarazzShaikh/ts-noise
+**URL:** https://github.com/FarazzShaikh/ts-noise
+**Key Features:**
+- CPU gradient noise library
+- 2D and 3D Perlin noise
+- fBm (Fractional Brownian Motion)
+
+---
+
+### 3. Three.js TSL Noise Functions
+**Reference:** https://threejsroadmap.com/blog/10-noise-functions-for-threejs-tsl-shaders
+**Types:**
+- White noise, Value noise
+- Perlin noise, Simplex noise
+- Worley noise (cellular)
+- Layering techniques for fBm
+
+**Tip:** Start with base types, then combine with layering.
+
+---
+
+### 4. The Book of Shaders - Noise
+**URL:** https://thebookofshaders.com/11/
+**Key Concepts:**
+- Ken Perlin's simplex noise (Siggraph 2001)
+- Lower computational complexity than classic Perlin
+- Essential reading for shader development
+
+---
+
+## Performance & Instancing
+
+### InstancedMesh (Built-in)
+**Key Insight:**
+> "With instancing, you can render hundreds of thousands, or even millions, of meshes with a single render call—but only if the meshes share the same geometry and material."
+
+**Performance Notes:**
+- Draw calls are CPU-to-GPU communication bottleneck
+- 16k instances is common baseline
+- Up to 4 million possible on good hardware
+
+---
+
+### 1. Alchemist0823/three.quarks
+**URL:** https://github.com/Alchemist0823/three.quarks
+**Key Features:**
+- **High-performance particle system / VFX engine**
+- Custom shaders + instancing + batching
+- Minimal draw calls
+
+---
+
+### 2. pailhead/three-instanced-mesh
+**URL:** https://github.com/pailhead/three-instanced-mesh
+**Key Features:**
+- Wrapper around InstancedBufferGeometry
+- 30k objects in single draw call
+- Original example uses 5, modified does 30,000
+
+---
+
+### 3. 100k Spheres Demo
+**Blog:** https://velasquezdaniel.com/blog/rendering-100k-spheres-instantianing-and-draw-calls/
+**GitHub:** https://github.com/Anemolo/100k-objects-with-Instanced-Geometries
+**Key Learning:**
+- Creating 100k meshes = bad performance (too many draw calls)
+- Instancing = all objects in one draw call
+
+---
+
+### GPGPU Pattern
+**Key Concept:**
+> "Create textures to store data where each pixel represents the position of a single particle."
+
+**Benefits:**
+- Offload tasks from CPU to GPU
+- GPUs excel at parallel operations
+- Ideal for thousands of particles
+
+---
+
 ## GPGPU & Fluid Simulation
 
 ### 1. amandaghassaei/FluidSimulation
