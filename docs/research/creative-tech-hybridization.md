@@ -417,6 +417,58 @@ import { ShaderGradientCanvas, ShaderGradient } from '@shadergradient/react'
 
 ## Curated Reference Lists
 
+### 0. ezshine/AwesomeSites — THE GOLDMINE
+**URL:** https://github.com/ezshine/AwesomeSites
+**Stars:** 1.9k
+**License:** MIT
+**Sites:** 133 websites
+
+> "Amazing websites preserved for learning web development and creative inspiration."
+
+**Why this is special:**
+- **Working local copies** — sites backed up from browser cache
+- **Tested and fixed** — all run via local HTTP server
+- **Organized by category** — easy to find references
+- **Six Pack repos** — Pack01-Pack06 contain the actual files
+
+**Categories:**
+| Category | Count | Examples |
+|----------|-------|----------|
+| Game | 33 | Slow Roads, Ouigo Let's Play, NARS Play Your Power |
+| Portfolio | 22 | **Bruno Simon**, David HCKH, Renaud Rohlinger |
+| E-Commerce | 11 | WebXR Sneakers (Lusion), Gleec, Fendi |
+| Metaverse | 7 | Coastal World, **Samsy Ninja**, Orion |
+| Room | 6 | Adobe x Bowie, Little Workshop Showroom |
+| Exhibition | 6 | Lusion Infinite Passerella, DT Space VR |
+| Space | 7 | NASA Mars 2020 Eyes, ISS Docking Simulator |
+| Car | 8 | Lamborghini, Lusion Gemini, Xiaomi SU7 |
+| Other | 33+ | Wildflower, The Female Gaze, QQ PVP |
+
+**CRITICAL SITES FOR THE IRREAL:**
+
+1. **Samsy Ninja** (our original inspiration!)
+2. **Bruno Simon** — legendary portfolio, car driving demo
+3. **Lusion experiences** (multiple):
+   - exp-gemini.lusion.co (car)
+   - exp-infinite-passerella.lusion.co (exhibition)
+   - exp-my-little-storybook.lusion.co (storytelling)
+   - webxr-sneakers.lusion.co (e-commerce)
+4. **Coastal World** — metaverse reference
+5. **NASA Mars 2020 Eyes** — data visualization
+6. **Slow Roads** — infinite procedural driving
+7. **Little Workshop Showroom** — room experience
+8. **Wildflower** — organic/nature aesthetic
+
+**How to use:**
+```bash
+# Clone a Pack repo
+git clone https://github.com/nichenqin/AwesomeSites-Pack01.git
+# Serve locally
+npx serve
+```
+
+---
+
 ### 1. AxiomeCG/awesome-threejs
 **URL:** https://github.com/AxiomeCG/awesome-threejs
 **Description:** Curated list of awesome ThreeJS resources
@@ -835,6 +887,76 @@ Create: `/site/src/lib/creative-tech/CREDITS.md`
 - Procedural particle animations
 
 **Relevance:** The Irreal already uses Tone.js for audio — this could sync metaballs with the 40Hz→110Hz drone.
+
+---
+
+## Camera & Animation
+
+### 1. yomotsu/camera-controls
+**URL:** https://github.com/yomotsu/camera-controls
+**Key Features:**
+- Camera shake effects
+- Rotation with duration and easing (GSAP compatible)
+- Path animation
+- Complex transitions with await
+- Works in R3F (available via drei)
+
+**drei integration:** `<CameraControls />` component
+
+---
+
+### 2. drei CameraShake
+**Location:** `@react-three/drei`
+**Usage:**
+```jsx
+import { CameraShake, OrbitControls } from '@react-three/drei'
+
+<CameraShake
+  maxYaw={0.1}
+  maxPitch={0.1}
+  maxRoll={0.1}
+  yawFrequency={0.1}
+  pitchFrequency={0.1}
+  rollFrequency={0.1}
+/>
+```
+
+---
+
+### 3. GSAP + React Three Fiber
+**Gist:** https://gist.github.com/ektogamat/8ba8c0d103fa683e7a836661aada55ed
+
+**Note:** Community generally prefers react-spring for R3F, but GSAP works well for complex orchestrated animations (6-7 tweens, bezier paths, custom easing).
+
+The Irreal already uses GSAP for CrystallizingText — compatible approach.
+
+---
+
+## 3D Text
+
+### 1. troika-three-text
+**URL:** https://github.com/protectwise/troika/tree/main/packages/troika-three-text
+**Key Features:**
+- High quality SDF text rendering
+- Parses .ttf, .otf, .woff directly
+- On-the-fly SDF atlas generation
+- Kerning, ligatures, RTL/bidirectional
+- Arabic joined scripts
+- Unicode fallback fonts
+- **Web worker** for parsing (no frame drops)
+
+**Integration:** Available in drei
+
+---
+
+### 2. countertype/three-text
+**URL:** https://github.com/countertype/three-text
+**Key Features:**
+- **True 3D mesh geometry** (not SDF)
+- Can be lit, shaded, manipulated like any 3D model
+- Works with Three.js, R3F, p5.js, WebGL, WebGPU
+
+**Use case:** When you need actual 3D extruded text that interacts with lighting
 
 ---
 
