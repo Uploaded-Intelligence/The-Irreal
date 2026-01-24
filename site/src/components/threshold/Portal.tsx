@@ -1,7 +1,9 @@
-import { useRef, useState } from 'react';
+import { useRef, useMemo, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
+import vertexShader from './shaders/portal.vert.glsl?raw';
+import fragmentShader from './shaders/portal.frag.glsl?raw';
 
 interface PortalProps {
   position: [number, number, number];
@@ -13,36 +15,40 @@ interface PortalProps {
 }
 
 export function Portal({ position, color, glowColor, label, hint, onClick }: PortalProps) {
-  const groupRef = useRef<THREE.Group>(null);
-  const torusRef = useRef<THREE.Mesh>(null);
+  const meshRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
+  const hoverValue = useRef(0);
 
-  // Breathing animation
-  const breathPhase = useRef(Math.random() * Math.PI * 2);
+  const uniforms = useMemo(
+    () => ({
+      time: { value: 0 },
+      colorStart: { value: new THREE.Color(color) },
+      colorEnd: { value: new THREE.Color(glowColor) },
+      hover: { value: 0 },
+    }),
+    [color, glowColor]
+  );
 
-  useFrame((_, delta) => {
-    if (!torusRef.current) return;
+  useFrame((state) => {
+    if (!meshRef.current) return;
 
-    // Breathing pulse
-    breathPhase.current += delta * Math.PI * 1.5;
-    const breathScale = 1 + Math.sin(breathPhase.current) * 0.05;
+    // Update uniforms
+    uniforms.time.value = state.clock.elapsedTime;
+    
+    // Smooth hover transition
+    const targetHover = hovered ? 1 : 0;
+    hoverValue.current += (targetHover - hoverValue.current) * 0.1;
+    uniforms.hover.value = hoverValue.current;
 
-    // Apply scale
-    const targetScale = hovered ? 1.15 : breathScale;
-    torusRef.current.scale.lerp(
-      new THREE.Vector3(targetScale, targetScale, targetScale),
-      0.1
-    );
-
-    // Rotate slowly
-    torusRef.current.rotation.z += delta * 0.1;
+    // Floating animation
+    meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
   });
 
   return (
-    <group ref={groupRef} position={position}>
-      {/* Portal ring */}
+    <group position={position}>
+      {/* The Shader Portal - A Quad (Plane) that renders the organic shape */}
       <mesh
-        ref={torusRef}
+        ref={meshRef}
         onClick={onClick}
         onPointerEnter={() => {
           setHovered(true);
@@ -52,50 +58,47 @@ export function Portal({ position, color, glowColor, label, hint, onClick }: Por
           setHovered(false);
           document.body.style.cursor = 'default';
         }}
+        scale={2.5} // Larger canvas for the shader to draw in
       >
-        <torusGeometry args={[1.5, 0.08, 16, 64]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={glowColor}
-          emissiveIntensity={hovered ? 2 : 0.8}
-          transparent
-          opacity={0.9}
-        />
-      </mesh>
-
-      {/* Inner glow */}
-      <mesh>
-        <circleGeometry args={[1.4, 32]} />
-        <meshBasicMaterial
-          color={glowColor}
-          transparent
-          opacity={hovered ? 0.3 : 0.15}
+        <planeGeometry args={[2, 2]} />
+        <shaderMaterial
+          vertexShader={vertexShader}
+          fragmentShader={fragmentShader}
+          uniforms={uniforms}
+          transparent={true}
           side={THREE.DoubleSide}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
         />
       </mesh>
 
       {/* Label - using Html for proper fonts */}
-      <Html position={[0, -2.2, 0]} center>
+      <Html position={[0, -2.5, 0]} center style={{ pointerEvents: 'none' }}>
         <div style={{
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: '1.2rem',
+          fontSize: '1.4rem',
           color: '#e0e0e8',
           textAlign: 'center',
           whiteSpace: 'nowrap',
-          textShadow: '0 0 10px rgba(124, 111, 224, 0.5)',
+          textShadow: '0 0 15px rgba(124, 111, 224, 0.8)',
+          opacity: hovered ? 1 : 0.7,
+          transition: 'opacity 0.3s',
+          transform: hovered ? 'scale(1.1)' : 'scale(1)',
         }}>
           {label}
         </div>
       </Html>
 
       {/* Hint */}
-      <Html position={[0, -2.8, 0]} center>
+      <Html position={[0, -3.0, 0]} center style={{ pointerEvents: 'none' }}>
         <div style={{
           fontFamily: "'EB Garamond', serif",
-          fontSize: '0.9rem',
+          fontSize: '1rem',
           color: '#8888a0',
           textAlign: 'center',
           whiteSpace: 'nowrap',
+          opacity: hovered ? 1 : 0.5,
+          transition: 'opacity 0.3s',
         }}>
           {hint}
         </div>
