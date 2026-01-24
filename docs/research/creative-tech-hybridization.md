@@ -448,6 +448,9 @@ import { ShaderGradientCanvas, ShaderGradient } from '@shadergradient/react'
 
 1. **Samsy Ninja** (our original inspiration!)
 2. **Bruno Simon** — legendary portfolio, car driving demo
+   - **SOURCE CODE AVAILABLE:** https://github.com/brunosimon/folio-2019 (4.6k ⭐)
+   - Also: https://github.com/brunosimon/my-room-in-3d (4.4k ⭐)
+   - Also: https://github.com/brunosimon/infinite-world (procedural world)
 3. **Lusion experiences** (multiple):
    - exp-gemini.lusion.co (car)
    - exp-infinite-passerella.lusion.co (exhibition)
@@ -466,6 +469,50 @@ git clone https://github.com/nichenqin/AwesomeSites-Pack01.git
 # Serve locally
 npx serve
 ```
+
+---
+
+## Legendary Open-Source Portfolios & Experiments
+
+### 1. brunosimon/folio-2019
+**URL:** https://github.com/brunosimon/folio-2019
+**Stars:** 4.6k
+**Key Features:**
+- Driveable 3D world
+- Cannon.js physics (primitive shapes for collision)
+- Blender models
+- No common lights/shadows (performance optimization)
+
+**Technical Insights:**
+> "To simplify the physics, I created primitive shapes matching the more detailed models. Cannon.js handled those primitive shapes, and I updated the Three.js universe on each frame according to the primitive coordinates."
+
+---
+
+### 2. brunosimon/my-room-in-3d
+**URL:** https://github.com/brunosimon/my-room-in-3d
+**Stars:** 4.4k
+**Key Features:**
+- Isometric room experience
+- Interactive elements
+- Day/night cycle
+
+---
+
+### 3. brunosimon/infinite-world
+**URL:** https://github.com/brunosimon/infinite-world
+**Key Features:**
+- Procedurally generated infinite world
+- WebGL + Three.js
+- Terrain generation
+
+---
+
+### 4. Codrops: Curly Tubes (Lusion Recreation)
+**URL:** https://tympanus.net/codrops/2021/05/17/curly-tubes-from-the-lusion-website-with-three-js/
+**Key Features:**
+- Light scattering effect
+- Recreation of Lusion aesthetic
+- Step-by-step tutorial
 
 ---
 
