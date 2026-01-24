@@ -5,6 +5,60 @@
 
 ---
 
+## 🎯 EXECUTIVE SUMMARY: The Irreal Implementation Path
+
+### The Mission
+Create an organic, morphin-style threshold experience that feels unprecedented — "I've never seen anything like this."
+
+### The Key Repos (Priority Order)
+
+| Priority | Repo | Why |
+|----------|------|-----|
+| 🥇 | **AwesomeSites** | 133 working demos including Samsy Ninja |
+| 🥇 | **brunoimbrizi/interactive-particles** | Off-screen texture technique for mouse trails |
+| 🥇 | **sjpt/metaballsWebgl** | 10K spheres at 60fps GPU metaballs |
+| 🥈 | **pmndrs/postprocessing** | Bloom + chromatic aberration |
+| 🥈 | **drei** | Stars, Environment, ScrollControls |
+| 🥉 | **shader-park-core** | JS → GLSL SDF abstraction |
+| 🥉 | **r3f-flow-field-particles** | GPGPU curl noise particles |
+
+### The Architecture
+
+```
+POST-PROCESSING (Bloom, ChromaticAberration, Vignette)
+            │
+┌───────────┴───────────┐
+│   FOREGROUND          │  ← Metaballs (sjpt or shader-park)
+│   Mouse-following     │  ← Off-screen texture trail (brunoimbrizi)
+│   Organic blobs       │  ← smoothMin blending
+│                       │
+├───────────────────────┤
+│   MID-GROUND          │  ← Flow field particles (r3f-flow-field)
+│   Curl noise flow     │  ← OR sympoietic-signature artifact
+│                       │
+├───────────────────────┤
+│   BACKGROUND          │  ← Stars (drei)
+│   Atmosphere          │  ← OR shadergradient
+└───────────────────────┘
+```
+
+### Immediate Actions
+
+1. **Clone AwesomeSites Pack** containing Samsy Ninja → study the implementation
+2. **Fix TypeScript errors** → get build working
+3. **Add postprocessing** → `npm install @react-three/postprocessing`
+4. **Start with simple path:**
+   - drei Stars for background
+   - Three.js MarchingCubes for metaballs
+   - postprocessing for polish
+5. **Iterate with more sophisticated repos** once baseline works
+
+### Attribution Required
+
+See [Attribution Requirements](#attribution-requirements) section below.
+
+---
+
 ## Table of Contents
 
 1. [Core Philosophy](#core-philosophy)
