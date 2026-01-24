@@ -937,6 +937,90 @@ Create: `/site/src/lib/creative-tech/CREDITS.md`
 
 ---
 
+## Scroll & Parallax
+
+### 1. drei ScrollControls
+**Location:** `@react-three/drei`
+**Key Features:**
+- Built-in scroll management for R3F
+- Same authors as react-spring
+- Easy integration
+
+**Usage:**
+```jsx
+import { ScrollControls, Scroll } from '@react-three/drei'
+
+<ScrollControls pages={3} damping={0.1}>
+  <Scroll>
+    {/* Your 3D content tied to scroll */}
+  </Scroll>
+</ScrollControls>
+```
+
+---
+
+### 2. Codrops: Scroll, Refraction and Shader Effects
+**URL:** https://tympanus.net/codrops/2019/12/16/scroll-refraction-and-shader-effects-in-three-js-and-react/
+**Key Insight:**
+> "There are many things that are possible beyond the generic parallax; you can tie anything to scroll."
+
+**Technique:**
+- Real scroll-area in front of canvas with set height
+- Simple scroll listener
+- No emulated scrollbar needed
+
+---
+
+### 3. Codrops: Scroll Based Animations
+**URL:** https://tympanus.net/codrops/2022/01/05/crafting-scroll-based-animations-in-three-js/
+**Key Technique:**
+- Put camera in a Group
+- Apply parallax to group, not camera directly
+- Cursor-based parallax feels natural
+
+---
+
+## Mouse Interaction & Particles
+
+### 1. brunoimbrizi/interactive-particles
+**URL:** https://github.com/brunoimbrizi/interactive-particles
+**Key Features:**
+- Large number of particles reacting to mouse/touch
+- **Off-screen texture technique** for efficiency
+- Cursor position drawn onto texture
+- Trail with easing function
+
+**This is the technique for The Irreal's mouse-following metaballs!**
+
+---
+
+### 2. markuslerner/THREE.Interactive
+**URL:** https://github.com/markuslerner/THREE.Interactive
+**Key Features:**
+- Fast, simple interaction manager
+- Mouse and touch events on 3D objects
+
+---
+
+### 3. Codrops: Interactive Repulsion Effect
+**URL:** https://tympanus.net/codrops/2018/12/06/interactive-repulsion-effect-with-three-js/
+**Key Technique:**
+- Grid of elements reacting to mouse
+- Y position, rotation, scale based on distance
+- Closer = larger
+- Radius-based influence
+
+---
+
+### 4. Codrops: Interactive Particles with Three.js
+**URL:** https://tympanus.net/codrops/2019/01/17/interactive-particles-with-three-js/
+**Key Features:**
+- Off-screen texture for cursor history
+- Trail with smooth grow/shrink
+- Efficient shader-based approach
+
+---
+
 ## Camera & Animation
 
 ### 1. yomotsu/camera-controls
