@@ -11,10 +11,11 @@ export default defineConfig({
   site: 'https://the-irreal.world', // Update when domain is chosen
   vite: {
     optimizeDeps: {
-      exclude: ['@resvg/resvg-js']
+      exclude: ['@resvg/resvg-js'],
+      include: ['detect-gpu']
     },
     ssr: {
-      noExternal: ['three', '@react-three/fiber', '@react-three/drei']
+      noExternal: ['three', '@react-three/fiber', '@react-three/drei', 'detect-gpu']
     }
   }
 });
