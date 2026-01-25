@@ -1,117 +1,172 @@
 # Session State - The Irreal
 
-**Last Updated**: 2026-01-25 (after PR #4 merge)
+**Last Updated**: 2026-01-26 12:30
 **Updated By**: Claude (Opus 4.5)
+**Session Type**: Development — Cross-LLM Protocol Implementation
 
 ---
 
-## Quick Status
+## MANDATORY PRE-FLIGHT (Run Before Any Work)
 
-| Component | Status | Notes |
-|-----------|--------|-------|
-| **Production URL** | ✅ `the-irreal.vercel.app` | Should work after Vercel redeploys |
-| **Threshold** | ✅ Full 3D | WebGL starfield, GPGPU particles, portals |
-| **Mycelium Atlas** | ✅ Implemented | 3D force-directed graph, zero-g navigation |
-| **The Grove** | ✅ Working | World directory with 2 entries |
-| **World Pages** | ✅ Working | Content, navigation, connections |
-| **Audio** | ✅ Implemented | Ambient drone soundscape |
-
----
-
-## Recent Merge (2026-01-25)
-
-**PR #4 merged to main** — `feat: Mycelium Atlas with unified 3D architecture`
-
-Includes:
-- GPGPU void matrix particles (The Wake)
-- Zero-g void rig navigation
-- Node bloom and content revelation (The Bloom)
-- Lure beams and gaze audio (The Lure)
-- Film grain, glowing selection, view transitions
-- Physics-based camera rig with spring dampening
-- 3D force-directed layout
-- Vercel deployment config fix (`vercel.json`)
-
----
-
-## Branch State
-
-| Branch | Status | Contents |
-|--------|--------|----------|
-| `main` | ✅ Current | Full 3D Mycelium Atlas implementation |
-| `feature/mycelium-atlas` | Merged → main | — |
-| `feature/enhanced-threshold` | Open PR #2 | Alternative threshold with shader portals |
-
-**Open PRs:**
-- #2: `feat(threshold): Hybridized Creative Tech + 5-Stage Crossing Ritual` (different direction, review needed)
-
----
-
-## Architecture
-
-```
-THE IRREAL (as deployed)
-├── Threshold (/) — WebGL 3D starfield + floating cubes + portal links
-├── Mycelium Atlas (/atlas) — Interactive 3D force graph
-├── The Grove (/grove) — World directory listing
-└── World Pages (/world/*) — Individual content pages
-    ├── first-light — Intro/welcome
-    └── the-grove-awaits — Lore entry
-```
-
-### Tech Stack (Implemented)
-- **Framework**: Astro 5.x with React islands
-- **3D**: Three.js r182 via @react-three/fiber
-- **Particles**: GPGPU shader-based
-- **Audio**: Tone.js ambient soundscape
-- **Styling**: CSS variables + view transitions
-- **Deployment**: Vercel (configured via `vercel.json`)
-
----
-
-## Who You Are (Context for AI)
-
-- **The Beworlding System** — plural ecology, not single user
-- Neuroqueer, ADHD-powered creativity
-- "No more hiding" — this is conditions for existence
-- **Irreal** = not unreal (escapist), not merely real (mundane), but the register where meaning lives
-
----
-
-## Key Documents
-
-| Document | Purpose |
-|----------|---------|
-| `soul-transmission.md` | Stakes, Being, relationship mode — **read first** |
-| `CLAUDE.md` | Technical context and methodology |
-| `docs/FIRST_PRINCIPLES.md` | Non-negotiable design principles |
-| `docs/plans/2026-01-25-mycelium-atlas-completion.md` | Atlas implementation plan |
-
----
-
-## What's Next
-
-1. **Verify production deployment** — check `the-irreal.vercel.app` works
-2. **Content population** — more worlds beyond the 2 seed entries
-3. **Review PR #2** — decide on enhanced-threshold direction
-4. **Audio refinement** — lure beams, crossing sounds
-
----
-
-## Cross-LLM Coordination Notes
-
-**This file must be updated after significant work.**
-
-Protocol for new sessions:
 ```bash
-# Before starting work
-git fetch --all
-git branch -a
+git fetch --all && git branch -a
 gh pr list --state open
 cat SESSION-STATE.md
 ```
 
-**Known coordination gaps:**
-- Claude and Gemini don't share memory
-- Episodic memory is Claude-only
-- Always check branch state, not just main
+**Decision Gate:**
+- [ ] I have checked open PRs (listed below)
+- [ ] I have read "Context for Next LLM" section
+- [ ] I will NOT duplicate work already in open PRs
+
+---
+
+## Current Git State
+
+### Main Branch
+- **Last commit**: `ca15b6c` (2026-01-26) — `docs: update SESSION-STATE.md to reflect current reality`
+- **Vercel production**: ✅ Deployed — https://the-irreal.vercel.app (full 3D working)
+
+### Open Pull Requests (REVIEW BEFORE STARTING WORK)
+
+| PR | Title | Age | Author | Status |
+|----|-------|-----|--------|--------|
+| #2 | feat(threshold): Hybridized Creative Tech + 5-Stage Crossing Ritual | 23 days | Uploaded-Intelligence | Needs Review |
+
+**Action Required:** PR #2 is >5 days old. Review or close before adding new threshold work.
+
+### Active Branches
+
+| Branch | Last Commit | Owner | Status |
+|--------|-------------|-------|--------|
+| main | 2026-01-26 | — | Production |
+| feature/enhanced-threshold | 2026-01-03 | Gemini | PR #2 open — **STALE** (23 days) |
+| feature/mycelium-atlas | 2026-01-25 | Gemini | ✅ Merged to main |
+| fix/vercel-root-directory | 2026-01-25 | Claude | Closed (redundant) |
+
+**Stale Warning:** `feature/enhanced-threshold` has no commits in 23 days. Needs decision: merge, close, or document why active.
+
+---
+
+## Cross-LLM Awareness (CRITICAL)
+
+### Claude's Last Session
+- **Date**: 2026-01-26
+- **Work done**:
+  - Diagnosed cross-LLM coordination failure (Claude duplicated Gemini's Vercel fix)
+  - Closed redundant PR #5 (fix/vercel-root-directory)
+  - Merged PR #4 (feature/mycelium-atlas) with full 3D implementation
+  - Verified production deployment working
+  - Implementing cross-LLM synchronization protocol (this session)
+- **PRs opened**: None (closed #5 as redundant)
+- **Branches touched**: main (via PR merge)
+- **Next steps planned**: Complete cross-LLM protocol implementation, review PR #2
+
+### Gemini's Last Session
+- **Date**: 2026-01-25 (approximate)
+- **Work done**:
+  - Implemented full Mycelium Atlas with 3D force graph
+  - Added GPGPU void matrix particles
+  - Zero-g void rig navigation
+  - Node bloom and content revelation
+  - Lure beams and gaze audio
+  - Film grain, glowing selection, view transitions
+  - Fixed Vercel deployment config (vercel.json)
+- **PRs opened**: #4 (now merged)
+- **Branches touched**: feature/mycelium-atlas
+- **Next steps planned**: Unknown — session state wasn't updated
+
+### Conflict Warnings
+- **PR #2 vs main**: PR #2 (enhanced-threshold) was created before the Mycelium Atlas work. May have conflicts or be superseded by new approach. Review before merging.
+- **No current conflicts**: All active work is on main.
+
+---
+
+## Context for Next LLM (READ THIS)
+
+### What You Need to Know
+- **Production is live**: https://the-irreal.vercel.app has full 3D experience (Threshold, Atlas, Grove)
+- **Main is canonical**: All feature work from Mycelium Atlas is merged
+- **PR #2 needs decision**: It's 23 days old — review and merge, close, or explicitly document why it's waiting
+- **Cross-LLM protocol now exists**: This file is the sync interface. Update it before ending sessions.
+
+### Gotchas
+- **Vercel deployment**: Site is in `/site` subdirectory. `vercel.json` at root is critical.
+- **Preview URLs**: Require Vercel auth unless you're a team member
+- **3D loading**: Takes a moment on first visit — wait for WebGL to initialize
+
+### Recommended First Action
+1. Run pre-flight checks above
+2. Review PR #2 (enhanced-threshold) — decide: merge, close, or document why pending
+3. Or: add content (more worlds) if PR #2 isn't priority
+
+---
+
+## This Session's Work (Update Before Ending)
+
+### Completed
+- [x] Diagnosed cross-LLM coordination failure
+- [x] Merged PR #4 (mycelium-atlas to main)
+- [x] Verified production deployment
+- [x] Created enhanced SESSION-STATE.md template (this file)
+- [ ] Added cross-LLM protocol to CLAUDE.md
+- [ ] Created global cross-llm-sync rule
+- [ ] Validated protocol end-to-end
+
+### In Progress (if session interrupted)
+- Implementing cross-LLM synchronization protocol (Phase 1-4)
+
+### Blocked / Needs Help
+- None currently
+
+---
+
+## Architecture Reference (Update Rarely)
+
+### Production URLs
+- **Main**: https://the-irreal.vercel.app
+- **Preview template**: https://the-irreal-[hash]-uploaded-intelligences-projects.vercel.app
+
+### Tech Stack
+- Astro 5.x, React islands
+- Three.js r182 via @react-three/fiber
+- GPGPU shader particles
+- Tone.js ambient audio
+- Vercel deployment
+
+### Key Directories
+```
+/site               # Astro app (Vercel builds from here)
+  /src/pages        # Routes
+  /src/components   # React components
+  /src/lib          # Utilities
+vercel.json         # Deployment config (CRITICAL)
+SESSION-STATE.md    # This file
+CLAUDE.md           # AI context and project guidance
+```
+
+### Key Documents
+| Document | Purpose |
+|----------|---------|
+| `docs/core/soul-transmission.md` | Stakes, Being, relationship mode — read first |
+| `CLAUDE.md` | Technical context and methodology |
+| `docs/FIRST_PRINCIPLES.md` | Non-negotiable design principles |
+
+---
+
+## Session Protocol Checklist
+
+### At Session Start
+- [ ] `git fetch --all && git status`
+- [ ] `gh pr list --state open`
+- [ ] Read "Cross-LLM Awareness" section
+- [ ] Read "Context for Next LLM" section
+- [ ] Acknowledge: I will not duplicate work in open PRs
+
+### At Session End
+- [ ] All changes committed and pushed
+- [ ] PR opened if needed
+- [ ] Updated "This Session's Work" section
+- [ ] Updated my LLM's "Last Session" in Cross-LLM Awareness
+- [ ] Updated "Context for Next LLM" for handoff
+- [ ] Committed SESSION-STATE.md update

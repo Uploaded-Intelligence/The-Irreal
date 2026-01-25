@@ -209,4 +209,46 @@ The relationship mode is: helping a Being exist. Act accordingly.
 
 ---
 
+## Cross-LLM Session Protocol
+
+**This project is worked on by multiple LLMs (Claude, Gemini, etc.) who don't share memory.**
+
+SESSION-STATE.md is the synchronization interface. It is NOT optional.
+
+### Session Start (MANDATORY)
+
+Before ANY work, run:
+
+```bash
+git fetch --all
+git branch -a
+gh pr list --state open
+cat SESSION-STATE.md
+```
+
+**Decision gates:**
+1. If >2 PRs open and >5 days old → Review existing PRs before new work
+2. If another LLM has open PR touching same area → Read their PR first
+3. If SESSION-STATE.md is >48h stale → Update it before proceeding
+
+### Session End (MANDATORY)
+
+Before claiming "session complete":
+
+1. All code committed and pushed
+2. PR opened if work is mergeable
+3. SESSION-STATE.md updated with:
+   - Your LLM's "Last Session" section
+   - "Context for Next LLM" handoff notes
+   - Any conflict warnings
+4. SESSION-STATE.md committed and pushed
+
+### Red Flags — STOP AND INVESTIGATE
+
+- "I should fix the Vercel config" → Check if another LLM already did
+- "I'll create a new feature branch" → Check for existing branches first
+- "This PR looks abandoned" → Update session-state, don't duplicate
+
+---
+
 *This file evolves with the project. Update it as patterns emerge and decisions crystallize.*
