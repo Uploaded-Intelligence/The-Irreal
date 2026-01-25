@@ -78,6 +78,11 @@ export function VoidParticles({ count = 2000, radius = 50 }: VoidParticlesProps)
       posArray[i3 + 1] += velocities[i3 + 1] * velocityMult;
       posArray[i3 + 2] += velocities[i3 + 2] * velocityMult;
 
+      // Rush effect during crossing - particles stream toward camera (positive z)
+      if (stage === 'crossing') {
+        posArray[i3 + 2] += 0.8; // Strong z velocity toward camera
+      }
+
       // Apply breathing
       const dist = Math.sqrt(
         posArray[i3] ** 2 +
