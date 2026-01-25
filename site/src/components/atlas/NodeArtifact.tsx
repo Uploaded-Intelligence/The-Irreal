@@ -61,14 +61,14 @@ export function NodeArtifact({ nodeId, position, biome }: NodeArtifactProps) {
 
   const handlePointerEnter = () => {
     setHovered(true);
-    setHoveredNode(nodeId);
+    setHoveredNode(nodeId, position);
     setCameraTarget(position);
     document.body.style.cursor = 'pointer';
   };
 
   const handlePointerLeave = () => {
     setHovered(false);
-    setHoveredNode(null);
+    setHoveredNode(null, null);
     document.body.style.cursor = 'default';
   };
 

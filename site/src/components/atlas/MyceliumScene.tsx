@@ -4,6 +4,7 @@ import { SporeRig } from './SporeRig';
 import { NodeArtifact } from './NodeArtifact';
 import { VeinFlow } from './VeinFlow';
 import { VoidMatrixParticles } from './VoidMatrixParticles';
+import { LureBeam } from './LureBeam';
 import { useAtlasStore } from '../../stores/atlasStore';
 import { computeLayout } from '../../lib/forceLayout3D';
 
@@ -34,12 +35,13 @@ export function MyceliumScene({ graphData }: MyceliumSceneProps) {
       <Canvas camera={{ position: [0, 0, 30], fov: 60 }}>
         <SporeRig />
         <VoidMatrixParticles count={64} />
+        <LureBeam />
         <ambientLight intensity={0.4} />
         <pointLight position={[10, 10, 10]} intensity={1} />
         <pointLight position={[-10, -10, -10]} intensity={0.5} color="#6bc5ff" />
 
         {/* Render nodes */}
-        {nodes.map((node) => (
+        {nodes.map((node: any) => (
           <NodeArtifact
             key={node.id}
             nodeId={node.id}
@@ -49,7 +51,7 @@ export function MyceliumScene({ graphData }: MyceliumSceneProps) {
         ))}
 
         {/* Render veins */}
-        {edges.map((edge) => {
+        {edges.map((edge: any) => {
           const source = nodes.find((n: any) => n.id === edge.source);
           const target = nodes.find((n: any) => n.id === edge.target);
           if (!source || !target) return null;
