@@ -1,13 +1,68 @@
-import { Canvas } from '@react-three/fiber';
+import { useEffect, useRef } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Stars } from '@react-three/drei';
 import { EffectComposer, Bloom, Vignette, ChromaticAberration } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
+import * as Tone from 'tone';
 import { VoidParticles } from './VoidParticles';
 import { MetaballScene } from './MetaballScene';
 import { FlowFieldParticles } from './FlowFieldParticles';
 import { CameraRig } from './CameraRig';
 import { PortalGroup } from './PortalGroup';
 import { useThresholdStore } from '../../stores/thresholdStore';
+
+function Soundscape() {
+  const { camera } = useThree();
+  const noiseRef = useRef<Tone.Noise | null>(null);
+  const filterRef = useRef<Tone.Filter | null>(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    // Setup Audio Graph
+    const filter = new Tone.Filter(200, "lowpass").toDestination();
+    const noise = new Tone.Noise("brown").connect(filter);
+    
+    noise.volume.value = -Infinity; // Start silent
+    noise.start();
+
+    noiseRef.current = noise;
+    filterRef.current = filter;
+
+    const handleInteract = async () => {
+      if (started.current) return;
+      await Tone.start();
+      started.current = true;
+      // Fade in
+      noise.volume.rampTo(-12, 2); // -12dB is subtle
+    };
+
+    window.addEventListener('click', handleInteract);
+    window.addEventListener('keydown', handleInteract);
+
+    return () => {
+      window.removeEventListener('click', handleInteract);
+      window.removeEventListener('keydown', handleInteract);
+      noise.dispose();
+      filter.dispose();
+    };
+  }, []);
+
+  useFrame(() => {
+    if (!filterRef.current || !started.current) return;
+    
+    // Modulate filter based on depth
+    // Camera goes from 0 to -200 (crossing)
+    // 0 -> 200Hz
+    // -50 -> 800Hz
+    const depth = Math.abs(camera.position.z);
+    const targetFreq = 200 + (depth * 10); 
+    const clampedFreq = Math.min(targetFreq, 2000); // Cap at 2k
+
+    filterRef.current.frequency.rampTo(clampedFreq, 0.1);
+  });
+
+  return null;
+}
 
 export function VoidScene() {
   const prefersReducedMotion = useThresholdStore((s) => s.prefersReducedMotion);
@@ -33,6 +88,8 @@ export function VoidScene() {
         gl={{ antialias: true, alpha: true }}
         style={{ background: '#0a0a0f' }}
       >
+        <Soundscape />
+
         {/* Camera controller - handles z-axis movement and crossing animation */}
         <CameraRig />
 
