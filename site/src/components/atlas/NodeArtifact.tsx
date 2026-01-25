@@ -10,6 +10,8 @@ extend({ MToonNodeMaterial });
 
 interface NodeArtifactProps {
   nodeId: string;
+  title: string;
+  summary?: string;
   position: [number, number, number];
   biome: string;
 }
@@ -23,7 +25,7 @@ const BIOME_COLORS: Record<string, string> = {
   default: '#9d8fff',
 };
 
-export function NodeArtifact({ nodeId, position, biome }: NodeArtifactProps) {
+export function NodeArtifact({ nodeId, title, summary, position, biome }: NodeArtifactProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<any>(null); 
   const [hovered, setHovered] = useState(false);
@@ -115,8 +117,8 @@ export function NodeArtifact({ nodeId, position, biome }: NodeArtifactProps) {
             pointerEvents: 'none',
             textAlign: 'center'
           }}>
-            <h3 style={{ margin: 0, fontSize: '1.2rem', fontFamily: 'EB Garamond' }}>{nodeId}</h3>
-            <p style={{ fontSize: '0.8rem', opacity: 0.8 }}>Click to enter this world</p>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', fontFamily: 'EB Garamond' }}>{title}</h3>
+            <p style={{ fontSize: '0.8rem', opacity: 0.8 }}>{summary || 'Click to explore'}</p>
           </div>
         </Html>
       )}

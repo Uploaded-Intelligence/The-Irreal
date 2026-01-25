@@ -3,6 +3,7 @@ import { create } from 'zustand';
 export interface AtlasNode {
   id: string;
   title: string;
+  summary?: string;
   biome: string;
   stage: string;
   x: number;

@@ -9,7 +9,7 @@ import { useAtlasStore } from '../../stores/atlasStore';
 import { computeLayout } from '../../lib/forceLayout3D';
 
 interface GraphData {
-  nodes: Array<{ id: string; title: string; biome: string; stage: string }>;
+  nodes: Array<{ id: string; title: string; summary?: string; biome: string; stage: string }>;
   edges: Array<{ source: string; target: string }>;
 }
 
@@ -80,6 +80,8 @@ export function MyceliumScene({ graphData }: MyceliumSceneProps) {
           <NodeArtifact
             key={node.id}
             nodeId={node.id}
+            title={node.title}
+            summary={node.summary}
             position={[node.x, node.y, node.z]}
             biome={node.biome}
           />

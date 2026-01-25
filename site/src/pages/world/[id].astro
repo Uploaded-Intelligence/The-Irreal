@@ -94,8 +94,23 @@ const biomeLabels: Record<string, string> = {
     )}
 
     <footer class="world-footer">
-      <a href="/atlas">← Back to Atlas</a>
+      <a href="/atlas" class="back-link" id="back-link">← Back</a>
     </footer>
+
+    <script>
+      // Use browser history for contextual back navigation
+      const backLink = document.getElementById('back-link');
+      if (backLink) {
+        backLink.addEventListener('click', (e) => {
+          // If there's history and we came from the same site, use back
+          if (document.referrer && document.referrer.includes(window.location.origin)) {
+            e.preventDefault();
+            history.back();
+          }
+          // Otherwise, fall through to href="/atlas"
+        });
+      }
+    </script>
   </article>
 </BaseLayout>
 

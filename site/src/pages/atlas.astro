@@ -15,6 +15,7 @@ const worlds = await getCollection('worlds', ({ data }) => !data.draft);
 const nodes = worlds.map(world => ({
   id: world.data.id,
   title: world.data.title,
+  summary: world.data.summary,
   biome: world.data.biome,
   stage: world.data.stage,
 }));
