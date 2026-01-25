@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<!--
+    LABYRINTH GENESIS
+    An interactive exploration of the Thomas Attractor's bifurcation landscape
+    
+    The Thomas system: dx/dt = sin(y) - bx, dy/dt = sin(z) - by, dz/dt = sin(x) - bz
+    
+    As b decreases from 1.0 to 0.0:
+    - b > 1.0: Stable origin
+    - b = 1.0: Pitchfork bifurcation (origin splits)
+    - b ≈ 0.329: Hopf bifurcation (limit cycles emerge)
+    - b ≈ 0.208: Period doubling cascade begins
+    - b < 0.208: Chaos (strange attractor)
+    - b → 0: Labyrinth chaos (ergodic wandering)
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Labyrinth Genesis | Thomas Attractor</title>
+    
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Crimson+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --void: #0a0a0f;
+            --void-light: #12121a;
+            --void-lighter: #1a1a25;
+            --text-primary: #e8e6f0;
+            --text-secondary: #8888a0;
+            --text-dim: #555566;
+            --accent-x: #ff6b4a;
+            --accent-y: #4ae8e8;
+            --accent-z: #9b4aff;
+            --accent-blend: #ff88aa;
+            --glow: rgba(255, 107, 74, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--void);
+            color: var(--text-primary);
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        /* Main Layout */
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 340px;
+            flex-shrink: 0;
+            background: linear-gradient(180deg, var(--void-light) 0%, var(--void) 100%);
+            border-right: 1px solid var(--void-lighter);
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .sidebar::-webkit-scrollbar-track {
+            background: var(--void);
+        }
+        
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--void-lighter);
+            border-radius: 2px;
+        }
+        
+        /* Header */
+        .header {
+            margin-bottom: 32px;
+        }
+        
+        .title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            background: linear-gradient(135deg, var(--accent-x) 0%, var(--accent-z) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 11px;
+            color: var(--text-secondary);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        
+        /* Control Sections */
+        .section {
+            margin-bottom: 28px;
+        }
+        
+        .section-title {
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--text-dim);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--void-lighter);
+        }
+        
+        /* The B-Parameter (Primary Control) */
+        .b-parameter {
+            background: var(--void-lighter);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .b-value-display {
+            font-size: 48px;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 8px;
+            font-family: 'Crimson Pro', serif;
+            background: linear-gradient(135deg, var(--accent-y) 0%, var(--accent-z) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .b-label {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+        
+        .regime-indicator {
+            text-align: center;
+            font-size: 12px;
+            color: var(--accent-blend);
+            margin-bottom: 16px;
+            min-height: 18px;
+        }
+        
+        /* Slider Styling */
+        .slider-container {
+            position: relative;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: var(--void);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, var(--accent-x) 0%, var(--accent-z) 100%);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 20px var(--glow);
+            transition: transform 0.2s ease;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, var(--accent-x) 0%, var(--accent-z) 100%);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 0 20px var(--glow);
+        }
+        
+        /* Bifurcation Markers */
+        .bifurcation-markers {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 9px;
+            color: var(--text-dim);
+        }
+        
+        .marker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .marker:hover {
+            color: var(--accent-y);
+        }
+        
+        .marker-line {
+            width: 1px;
+            height: 6px;
+            background: var(--text-dim);
+            margin-bottom: 4px;
+        }
+        
+        /* Playback Controls */
+        .playback-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        
+        .play-btn {
+            flex: 1;
+            padding: 12px;
+            background: var(--void);
+            border: 1px solid var(--void-lighter);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .play-btn:hover {
+            border-color: var(--accent-x);
+            box-shadow: 0 0 15px rgba(255, 107, 74, 0.2);
+        }
+        
+        .play-btn.active {
+            background: linear-gradient(135deg, var(--accent-x) 0%, var(--accent-z) 100%);
+            border-color: transparent;
+        }
+        
+        /* Control Groups */
+        .control-group {
+            margin-bottom: 16px;
+        }
+        
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .control-label span:first-child {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        
+        .control-value {
+            font-size: 11px;
+            color: var(--accent-y);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Bifurcation Diagram */
+        .bifurcation-diagram {
+            background: var(--void);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+        }
+        
+        .bifurcation-canvas {
+            width: 100%;
+            height: 120px;
+            border-radius: 4px;
+        }
+        
+        .diagram-label {
+            font-size: 9px;
+            color: var(--text-dim);
+            text-align: center;
+            margin-top: 8px;
+            letter-spacing: 0.1em;
+        }
+        
+        /* Color Legend */
+        .color-legend {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            color: var(--text-dim);
+        }
+        
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .legend-dot.x { background: var(--accent-x); }
+        .legend-dot.y { background: var(--accent-y); }
+        .legend-dot.z { background: var(--accent-z); }
+        
+        /* Toggle Switch */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--void-lighter);
+        }
+        
+        .toggle-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        
+        .toggle {
+            width: 44px;
+            height: 24px;
+            background: var(--void);
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .toggle.active {
+            background: linear-gradient(135deg, var(--accent-x) 0%, var(--accent-z) 100%);
+        }
+        
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: var(--text-primary);
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s;
+        }
+        
+        .toggle.active::after {
+            transform: translateX(20px);
+        }
+        
+        /* Presets */
+        .presets {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        
+        .preset-btn {
+            padding: 10px 8px;
+            background: var(--void);
+            border: 1px solid var(--void-lighter);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .preset-btn:hover {
+            border-color: var(--accent-y);
+            color: var(--text-primary);
+        }
+        
+        /* Info Panel */
+        .info-panel {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid var(--void-lighter);
+        }
+        
+        .equations {
+            font-size: 11px;
+            color: var(--text-dim);
+            line-height: 1.8;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .equation {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .eq-var {
+            width: 50px;
+        }
+        
+        .eq-x { color: var(--accent-x); }
+        .eq-y { color: var(--accent-y); }
+        .eq-z { color: var(--accent-z); }
+        
+        /* Canvas Area */
+        .canvas-area {
+            flex: 1;
+            position: relative;
+            background: var(--void);
+        }
+        
+        #three-container {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Stats Overlay */
+        .stats-overlay {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 10px;
+            color: var(--text-dim);
+            text-align: right;
+            pointer-events: none;
+        }
+        
+        .stat-row {
+            margin-bottom: 4px;
+        }
+        
+        /* Instructions */
+        .instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--text-dim);
+            letter-spacing: 0.1em;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        
+        /* Loading */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            color: var(--text-secondary);
+            letter-spacing: 0.1em;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--void-lighter);
+            border-top-color: var(--accent-x);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Controls -->
+        <div class="sidebar">
+            <!-- Header -->
+            <div class="header">
+                <h1 class="title">Labyrinth Genesis</h1>
+                <p class="subtitle">Thomas Attractor • Bifurcation Explorer</p>
+            </div>
+            
+            <!-- Primary Control: B Parameter -->
+            <div class="b-parameter">
+                <div class="b-value-display" id="b-display">0.190</div>
+                <div class="b-label">Dissipation Parameter (b)</div>
+                <div class="regime-indicator" id="regime-indicator">Strange Attractor • Chaos</div>
+                
+                <div class="slider-container">
+                    <input type="range" id="b-slider" min="0.01" max="1.0" step="0.001" value="0.19">
+                    <div class="bifurcation-markers">
+                        <div class="marker" onclick="setBValue(0.01)" title="Labyrinth">
+                            <div class="marker-line"></div>
+                            <span>0.01</span>
+                        </div>
+                        <div class="marker" onclick="setBValue(0.208)" title="Chaos Onset">
+                            <div class="marker-line"></div>
+                            <span>0.21</span>
+                        </div>
+                        <div class="marker" onclick="setBValue(0.329)" title="Hopf">
+                            <div class="marker-line"></div>
+                            <span>0.33</span>
+                        </div>
+                        <div class="marker" onclick="setBValue(1.0)" title="Stable">
+                            <div class="marker-line"></div>
+                            <span>1.0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="playback-controls">
+                    <button class="play-btn" id="play-btn" onclick="toggleAutoAnimate()">
+                        <span id="play-icon">▶</span>
+                        <span id="play-text">Journey</span>
+                    </button>
+                    <button class="play-btn" onclick="resetJourney()">
+                        ↺ Reset
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Bifurcation Diagram -->
+            <div class="section">
+                <div class="section-title">Bifurcation Landscape</div>
+                <div class="bifurcation-diagram">
+                    <canvas id="bifurcation-canvas" class="bifurcation-canvas"></canvas>
+                    <div class="diagram-label">X-coordinate vs b parameter</div>
+                </div>
+            </div>
+            
+            <!-- Visualization Parameters -->
+            <div class="section">
+                <div class="section-title">Visualization</div>
+                
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Particle Count</span>
+                        <span class="control-value" id="particle-value">3000</span>
+                    </div>
+                    <input type="range" id="particle-slider" min="500" max="10000" step="500" value="3000">
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Trail Length</span>
+                        <span class="control-value" id="trail-value">80</span>
+                    </div>
+                    <input type="range" id="trail-slider" min="10" max="200" step="10" value="80">
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Integration Speed</span>
+                        <span class="control-value" id="speed-value">1.0x</span>
+                    </div>
+                    <input type="range" id="speed-slider" min="0.1" max="3.0" step="0.1" value="1.0">
+                </div>
+            </div>
+            
+            <!-- Display Options -->
+            <div class="section">
+                <div class="section-title">Display</div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Show Trails</span>
+                    <div class="toggle active" id="toggle-trails" onclick="toggleTrails()"></div>
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Multi-Attractor Mode</span>
+                    <div class="toggle" id="toggle-multi" onclick="toggleMultiAttractor()"></div>
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Bloom Effect</span>
+                    <div class="toggle active" id="toggle-bloom" onclick="toggleBloom()"></div>
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Auto-Rotate Camera</span>
+                    <div class="toggle active" id="toggle-rotate" onclick="toggleAutoRotate()"></div>
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Thermal Fluctuations</span>
+                    <div class="toggle active" id="toggle-thermal" onclick="toggleThermal()"></div>
+                </div>
+            </div>
+            
+            <!-- Presets -->
+            <div class="section">
+                <div class="section-title">Presets</div>
+                <div class="presets">
+                    <button class="preset-btn" onclick="loadPreset('stable')">Stable</button>
+                    <button class="preset-btn" onclick="loadPreset('hopf')">Hopf</button>
+                    <button class="preset-btn" onclick="loadPreset('cascade')">Cascade</button>
+                    <button class="preset-btn" onclick="loadPreset('chaos')">Chaos</button>
+                    <button class="preset-btn" onclick="loadPreset('deep')">Deep</button>
+                    <button class="preset-btn" onclick="loadPreset('labyrinth')">Labyrinth</button>
+                </div>
+            </div>
+            
+            <!-- Color Legend -->
+            <div class="section">
+                <div class="section-title">Cyclic Symmetry</div>
+                <div class="color-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot x"></div>
+                        <span>X-axis</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot y"></div>
+                        <span>Y-axis</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot z"></div>
+                        <span>Z-axis</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Equations -->
+            <div class="info-panel">
+                <div class="equations">
+                    <div class="equation">
+                        <span class="eq-var eq-x">dx/dt</span>
+                        <span>= sin(y) − b·x</span>
+                    </div>
+                    <div class="equation">
+                        <span class="eq-var eq-y">dy/dt</span>
+                        <span>= sin(z) − b·y</span>
+                    </div>
+                    <div class="equation">
+                        <span class="eq-var eq-z">dz/dt</span>
+                        <span>= sin(x) − b·z</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Canvas -->
+        <div class="canvas-area">
+            <div id="three-container">
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                    <div>Initializing Labyrinth...</div>
+                </div>
+            </div>
+            
+            <div class="stats-overlay">
+                <div class="stat-row" id="stat-fps">FPS: --</div>
+                <div class="stat-row" id="stat-particles">Particles: --</div>
+                <div class="stat-row" id="stat-spread">Spread: --</div>
+            </div>
+            
+            <div class="instructions">
+                Drag to rotate • Scroll to zoom • Right-drag to pan
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ═══════════════════════════════════════════════════════════════════════════
+    // LABYRINTH GENESIS - Thomas Attractor Visualization
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // === CONFIGURATION ===
+    const CONFIG = {
+        // Thomas attractor parameters
+        b: 0.19,
+        dt: 0.02,
+        
+        // Visualization
+        particleCount: 3000,
+        trailLength: 80,
+        speedMultiplier: 1.0,
+        
+        // Display options
+        showTrails: true,
+        multiAttractor: false,
+        bloomEnabled: true,
+        autoRotate: true,
+        
+        // Animation
+        autoAnimate: false,
+        animateDirection: -1, // -1 = decreasing b (order to chaos)
+        animateSpeed: 0.0003,
+        
+        // Thermal dynamics (adaptive - respects b-dependent physics)
+        thermalNoiseBase: 0.003,       // Base Brownian perturbation strength
+        thermalNoiseEnabled: true,     // Toggle for thermal fluctuations
+        chaosThreshold: 0.25,          // Below this: chaos regime, full noise needed
+        entropyThreshold: 0.12,        // Spread below this triggers re-injection
+        entropyReinjectStrength: 0.3,  // Perturbation magnitude on collapse
+        lastEntropyCheck: 0,           // Throttle entropy calculations
+        entropyCheckInterval: 30,      // Frames between checks
+        
+        // Colors (RGB normalized)
+        colors: {
+            x: new THREE.Color(0xff6b4a), // Coral
+            y: new THREE.Color(0x4ae8e8), // Cyan
+            z: new THREE.Color(0x9b4aff), // Violet
+            background: new THREE.Color(0x0a0a0f)
+        },
+        
+        // Camera
+        cameraDistance: 12,
+        rotateSpeed: 0.001
+    };
+
+    // === GLOBAL STATE ===
+    let scene, camera, renderer;
+    let particles = [];
+    let trailGeometries = [];
+    let trailMeshes = [];
+    let pointsMesh;
+    let composer; // For post-processing
+    let frameCount = 0;
+    let lastTime = performance.now();
+    let fps = 0;
+
+    // === THOMAS ATTRACTOR DYNAMICS ===
+    
+    // Runge-Kutta 4th order integration
+    function thomasDerivatives(state, b) {
+        const [x, y, z] = state;
+        return [
+            Math.sin(y) - b * x,
+            Math.sin(z) - b * y,
+            Math.sin(x) - b * z
+        ];
+    }
+    
+    function rk4Step(state, b, dt) {
+        const k1 = thomasDerivatives(state, b);
+        
+        const state2 = [
+            state[0] + k1[0] * dt * 0.5,
+            state[1] + k1[1] * dt * 0.5,
+            state[2] + k1[2] * dt * 0.5
+        ];
+        const k2 = thomasDerivatives(state2, b);
+        
+        const state3 = [
+            state[0] + k2[0] * dt * 0.5,
+            state[1] + k2[1] * dt * 0.5,
+            state[2] + k2[2] * dt * 0.5
+        ];
+        const k3 = thomasDerivatives(state3, b);
+        
+        const state4 = [
+            state[0] + k3[0] * dt,
+            state[1] + k3[1] * dt,
+            state[2] + k3[2] * dt
+        ];
+        const k4 = thomasDerivatives(state4, b);
+        
+        return [
+            state[0] + (k1[0] + 2*k2[0] + 2*k3[0] + k4[0]) * dt / 6,
+            state[1] + (k1[1] + 2*k2[1] + 2*k3[1] + k4[1]) * dt / 6,
+            state[2] + (k1[2] + 2*k2[2] + 2*k3[2] + k4[2]) * dt / 6
+        ];
+    }
+
+    // === ENTROPY MONITORING ===
+    // Detects when particles collapse to identical states
+    
+    // Adaptive thermal noise - scales with b to respect physics:
+    // - High b (stable): attraction dominates, minimal noise needed
+    // - Low b (chaotic): noise prevents artificial collapse
+    function getEffectiveThermalNoise() {
+        if (!CONFIG.thermalNoiseEnabled) return 0;
+        
+        // Exponential decay above chaos threshold
+        // Below threshold: full noise (chaos needs diversity)
+        // Above threshold: noise tapers as attraction strengthens
+        const threshold = CONFIG.chaosThreshold;
+        const decayRate = 6; // How fast noise diminishes above threshold
+        
+        if (CONFIG.b <= threshold) {
+            return CONFIG.thermalNoiseBase; // Full noise in chaotic regime
+        } else {
+            // Exponential decay: at b=1.0, noise ≈ 1% of base
+            return CONFIG.thermalNoiseBase * Math.exp(-decayRate * (CONFIG.b - threshold));
+        }
+    }
+    
+    // Check if we're in a regime where convergence is EXPECTED (not a bug)
+    function isConvergenceExpected() {
+        // Above Hopf bifurcation (~0.329), system has stable attractors
+        // Convergence there is physically correct behavior
+        return CONFIG.b > 0.35;
+    }
+    
+    function getParticleSpread() {
+        if (particles.length === 0) return 1;
+        
+        // Calculate centroid
+        let cx = 0, cy = 0, cz = 0;
+        particles.forEach(p => {
+            cx += p.state[0];
+            cy += p.state[1];
+            cz += p.state[2];
+        });
+        cx /= particles.length;
+        cy /= particles.length;
+        cz /= particles.length;
+        
+        // Calculate variance (spread) around centroid
+        let variance = 0;
+        particles.forEach(p => {
+            variance += (p.state[0] - cx) ** 2 + 
+                        (p.state[1] - cy) ** 2 + 
+                        (p.state[2] - cz) ** 2;
+        });
+        
+        return Math.sqrt(variance / particles.length);
+    }
+    
+    function reinjectEntropy() {
+        // Preserve centroid but add diversity
+        const strength = CONFIG.entropyReinjectStrength;
+        particles.forEach(p => {
+            p.state[0] += (Math.random() - 0.5) * strength;
+            p.state[1] += (Math.random() - 0.5) * strength;
+            p.state[2] += (Math.random() - 0.5) * strength;
+            p.trail = []; // Clear trails to avoid visual discontinuity
+        });
+    }
+
+    // === PARTICLE CLASS ===
+    class Particle {
+        constructor(population = 0) {
+            this.population = population;
+            this.reset();
+        }
+        
+        reset() {
+            // Different initial conditions for multi-attractor mode
+            const spread = CONFIG.multiAttractor ? 4 : 2;
+            const offset = this.population * 2 - 1; // -1 or 1 for population 0 or 1
+            
+            this.state = [
+                (Math.random() - 0.5) * spread + offset * 0.5,
+                (Math.random() - 0.5) * spread + offset * 0.5,
+                (Math.random() - 0.5) * spread + offset * 0.5
+            ];
+            
+            this.trail = [];
+            this.age = 0;
+        }
+        
+        update() {
+            const dt = CONFIG.dt * CONFIG.speedMultiplier;
+            
+            // Multiple integration steps for stability at low b
+            const steps = CONFIG.b < 0.1 ? 3 : 1;
+            for (let i = 0; i < steps; i++) {
+                this.state = rk4Step(this.state, CONFIG.b, dt / steps);
+            }
+            
+            // === THERMAL FLUCTUATIONS ===
+            // Adaptive Brownian perturbation - scales with b
+            // High b: attraction dominates (physically correct convergence)
+            // Low b: noise maintains diversity (prevents artificial collapse)
+            const effectiveNoise = getEffectiveThermalNoise();
+            if (effectiveNoise > 0) {
+                this.state[0] += (Math.random() - 0.5) * effectiveNoise;
+                this.state[1] += (Math.random() - 0.5) * effectiveNoise;
+                this.state[2] += (Math.random() - 0.5) * effectiveNoise;
+            }
+            
+            // Check for numerical explosion
+            const mag = Math.sqrt(
+                this.state[0]**2 + 
+                this.state[1]**2 + 
+                this.state[2]**2
+            );
+            if (mag > 50 || isNaN(mag)) {
+                this.reset();
+                return;
+            }
+            
+            // Update trail
+            if (CONFIG.showTrails) {
+                this.trail.push([...this.state]);
+                while (this.trail.length > CONFIG.trailLength) {
+                    this.trail.shift();
+                }
+            }
+            
+            this.age++;
+        }
+        
+        // Get color based on velocity direction (cyclic symmetry)
+        getColor() {
+            const deriv = thomasDerivatives(this.state, CONFIG.b);
+            const mag = Math.sqrt(deriv[0]**2 + deriv[1]**2 + deriv[2]**2) + 0.001;
+            
+            // Normalize contributions
+            const xContrib = Math.abs(deriv[0]) / mag;
+            const yContrib = Math.abs(deriv[1]) / mag;
+            const zContrib = Math.abs(deriv[2]) / mag;
+            
+            // Blend colors based on axis contribution
+            const r = CONFIG.colors.x.r * xContrib + 
+                      CONFIG.colors.y.r * yContrib + 
+                      CONFIG.colors.z.r * zContrib;
+            const g = CONFIG.colors.x.g * xContrib + 
+                      CONFIG.colors.y.g * yContrib + 
+                      CONFIG.colors.z.g * zContrib;
+            const b = CONFIG.colors.x.b * xContrib + 
+                      CONFIG.colors.y.b * yContrib + 
+                      CONFIG.colors.z.b * zContrib;
+            
+            return new THREE.Color(r, g, b);
+        }
+    }
+
+    // === THREE.JS SETUP ===
+    function initThree() {
+        const container = document.getElementById('three-container');
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        
+        // Scene
+        scene = new THREE.Scene();
+        scene.background = CONFIG.colors.background;
+        
+        // Camera
+        camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
+        camera.position.set(
+            CONFIG.cameraDistance * 0.7,
+            CONFIG.cameraDistance * 0.5,
+            CONFIG.cameraDistance * 0.7
+        );
+        camera.lookAt(0, 0, 0);
+        
+        // Renderer
+        renderer = new THREE.WebGLRenderer({ 
+            antialias: true,
+            alpha: true
+        });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+        
+        // Remove loading indicator
+        document.getElementById('loading').style.display = 'none';
+        
+        // Initialize particles
+        initParticles();
+        
+        // Add simple orbit controls (manual implementation)
+        initControls();
+        
+        // Handle resize
+        window.addEventListener('resize', onResize);
+    }
+
+    function initParticles() {
+        particles = [];
+        
+        // Create particles
+        const populations = CONFIG.multiAttractor ? 2 : 1;
+        const particlesPerPop = Math.floor(CONFIG.particleCount / populations);
+        
+        for (let p = 0; p < populations; p++) {
+            for (let i = 0; i < particlesPerPop; i++) {
+                particles.push(new Particle(p));
+            }
+        }
+        
+        // Create point geometry
+        const positions = new Float32Array(particles.length * 3);
+        const colors = new Float32Array(particles.length * 3);
+        
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        
+        // Point material with vertex colors
+        const material = new THREE.PointsMaterial({
+            size: 0.05,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.9,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+        
+        // Remove old mesh if exists
+        if (pointsMesh) scene.remove(pointsMesh);
+        pointsMesh = new THREE.Points(geometry, material);
+        scene.add(pointsMesh);
+        
+        // Initialize trail meshes
+        initTrailMeshes();
+    }
+
+    function initTrailMeshes() {
+        // Remove old trail meshes
+        trailMeshes.forEach(mesh => scene.remove(mesh));
+        trailMeshes = [];
+        trailGeometries = [];
+        
+        if (!CONFIG.showTrails) return;
+        
+        // Create line geometry for each particle's trail
+        // For performance, we'll use a single line geometry
+        const trailMaterial = new THREE.LineBasicMaterial({
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.4,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+        
+        // We'll update trails in the animation loop
+        const trailGeometry = new THREE.BufferGeometry();
+        const maxTrailPoints = particles.length * CONFIG.trailLength;
+        const trailPositions = new Float32Array(maxTrailPoints * 3);
+        const trailColors = new Float32Array(maxTrailPoints * 3);
+        
+        trailGeometry.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3));
+        trailGeometry.setAttribute('color', new THREE.BufferAttribute(trailColors, 3));
+        
+        const trailMesh = new THREE.LineSegments(trailGeometry, trailMaterial);
+        scene.add(trailMesh);
+        trailMeshes.push(trailMesh);
+        trailGeometries.push(trailGeometry);
+    }
+
+    // === SIMPLE ORBIT CONTROLS ===
+    let isDragging = false;
+    let isPanning = false;
+    let previousMousePosition = { x: 0, y: 0 };
+    let spherical = { theta: Math.PI / 4, phi: Math.PI / 3, radius: CONFIG.cameraDistance };
+
+    function initControls() {
+        const canvas = renderer.domElement;
+        
+        canvas.addEventListener('mousedown', (e) => {
+            if (e.button === 0) isDragging = true;
+            if (e.button === 2) isPanning = true;
+            previousMousePosition = { x: e.clientX, y: e.clientY };
+        });
+        
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                const deltaX = e.clientX - previousMousePosition.x;
+                const deltaY = e.clientY - previousMousePosition.y;
+                
+                spherical.theta -= deltaX * 0.005;
+                spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi - deltaY * 0.005));
+                
+                updateCameraPosition();
+            }
+            previousMousePosition = { x: e.clientX, y: e.clientY };
+        });
+        
+        canvas.addEventListener('mouseup', () => {
+            isDragging = false;
+            isPanning = false;
+        });
+        
+        canvas.addEventListener('mouseleave', () => {
+            isDragging = false;
+            isPanning = false;
+        });
+        
+        canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            spherical.radius = Math.max(3, Math.min(30, spherical.radius + e.deltaY * 0.01));
+            updateCameraPosition();
+        });
+        
+        canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+    }
+
+    function updateCameraPosition() {
+        camera.position.x = spherical.radius * Math.sin(spherical.phi) * Math.cos(spherical.theta);
+        camera.position.y = spherical.radius * Math.cos(spherical.phi);
+        camera.position.z = spherical.radius * Math.sin(spherical.phi) * Math.sin(spherical.theta);
+        camera.lookAt(0, 0, 0);
+    }
+
+    // === ANIMATION LOOP ===
+    function animate() {
+        requestAnimationFrame(animate);
+        
+        // Update FPS
+        frameCount++;
+        const now = performance.now();
+        if (now - lastTime >= 1000) {
+            fps = frameCount;
+            frameCount = 0;
+            lastTime = now;
+            document.getElementById('stat-fps').textContent = `FPS: ${fps}`;
+            document.getElementById('stat-particles').textContent = `Particles: ${particles.length}`;
+            
+            // Update spread indicator with regime context
+            const spread = getParticleSpread();
+            const effectiveNoise = getEffectiveThermalNoise();
+            const convergenceOK = isConvergenceExpected();
+            
+            // Color logic: 
+            // - Chaotic regime + low spread = bad (coral)
+            // - Stable regime + low spread = correct (cyan)
+            // - High spread = always fine (cyan)
+            let spreadColor;
+            if (spread < CONFIG.entropyThreshold && !convergenceOK) {
+                spreadColor = '#ff6b4a'; // Problem: collapsed in chaos
+            } else {
+                spreadColor = '#4ae8e8'; // Fine: either high spread or expected convergence
+            }
+            
+            document.getElementById('stat-spread').innerHTML = 
+                `Spread: <span style="color:${spreadColor}">${spread.toFixed(3)}</span>` +
+                `<br>Noise: ${(effectiveNoise * 1000).toFixed(2)}‰`;
+        }
+        
+        // Auto-animate b parameter
+        if (CONFIG.autoAnimate) {
+            CONFIG.b += CONFIG.animateDirection * CONFIG.animateSpeed;
+            if (CONFIG.b <= 0.01) {
+                CONFIG.b = 0.01;
+                CONFIG.animateDirection = 1;
+            } else if (CONFIG.b >= 1.0) {
+                CONFIG.b = 1.0;
+                CONFIG.animateDirection = -1;
+            }
+            updateBSlider();
+            updateRegimeIndicator();
+        }
+        
+        // Auto-rotate camera
+        if (CONFIG.autoRotate && !isDragging) {
+            spherical.theta += CONFIG.rotateSpeed;
+            updateCameraPosition();
+        }
+        
+        // === ENTROPY COLLAPSE DETECTION ===
+        // Only active in chaotic regimes where convergence is unexpected
+        // In stable regimes (high b), convergence is physically correct
+        CONFIG.lastEntropyCheck++;
+        if (CONFIG.lastEntropyCheck >= CONFIG.entropyCheckInterval) {
+            CONFIG.lastEntropyCheck = 0;
+            
+            // Only check for problematic collapse in chaotic regimes
+            if (!isConvergenceExpected()) {
+                const spread = getParticleSpread();
+                
+                if (spread < CONFIG.entropyThreshold) {
+                    reinjectEntropy();
+                    // Visual feedback - brief flash in regime indicator
+                    const indicator = document.getElementById('regime-indicator');
+                    const originalText = indicator.textContent;
+                    indicator.textContent = '↻ Entropy Restored';
+                    indicator.style.color = '#4ae8e8';
+                    setTimeout(() => {
+                        indicator.textContent = originalText;
+                        indicator.style.color = '';
+                        updateRegimeIndicator();
+                    }, 500);
+                }
+            }
+        }
+        
+        // Update particles
+        particles.forEach(p => p.update());
+        
+        // Update point positions and colors
+        const positions = pointsMesh.geometry.attributes.position.array;
+        const colors = pointsMesh.geometry.attributes.color.array;
+        
+        particles.forEach((p, i) => {
+            const i3 = i * 3;
+            positions[i3] = p.state[0];
+            positions[i3 + 1] = p.state[1];
+            positions[i3 + 2] = p.state[2];
+            
+            const color = p.getColor();
+            colors[i3] = color.r;
+            colors[i3 + 1] = color.g;
+            colors[i3 + 2] = color.b;
+        });
+        
+        pointsMesh.geometry.attributes.position.needsUpdate = true;
+        pointsMesh.geometry.attributes.color.needsUpdate = true;
+        
+        // Update trails
+        if (CONFIG.showTrails && trailGeometries.length > 0) {
+            updateTrails();
+        }
+        
+        renderer.render(scene, camera);
+    }
+
+    function updateTrails() {
+        const geometry = trailGeometries[0];
+        const positions = geometry.attributes.position.array;
+        const colors = geometry.attributes.color.array;
+        
+        let vertexIndex = 0;
+        
+        particles.forEach((p, pIdx) => {
+            if (p.trail.length < 2) return;
+            
+            const color = p.getColor();
+            
+            for (let i = 0; i < p.trail.length - 1; i++) {
+                if (vertexIndex >= positions.length / 3 - 6) break;
+                
+                const alpha = i / p.trail.length; // Fade older parts
+                
+                // Start point
+                positions[vertexIndex * 3] = p.trail[i][0];
+                positions[vertexIndex * 3 + 1] = p.trail[i][1];
+                positions[vertexIndex * 3 + 2] = p.trail[i][2];
+                colors[vertexIndex * 3] = color.r * alpha;
+                colors[vertexIndex * 3 + 1] = color.g * alpha;
+                colors[vertexIndex * 3 + 2] = color.b * alpha;
+                vertexIndex++;
+                
+                // End point
+                positions[vertexIndex * 3] = p.trail[i + 1][0];
+                positions[vertexIndex * 3 + 1] = p.trail[i + 1][1];
+                positions[vertexIndex * 3 + 2] = p.trail[i + 1][2];
+                colors[vertexIndex * 3] = color.r * alpha;
+                colors[vertexIndex * 3 + 1] = color.g * alpha;
+                colors[vertexIndex * 3 + 2] = color.b * alpha;
+                vertexIndex++;
+            }
+        });
+        
+        // Clear remaining vertices
+        for (let i = vertexIndex * 3; i < positions.length; i++) {
+            positions[i] = 0;
+            colors[i] = 0;
+        }
+        
+        geometry.attributes.position.needsUpdate = true;
+        geometry.attributes.color.needsUpdate = true;
+        geometry.setDrawRange(0, vertexIndex);
+    }
+
+    // === BIFURCATION DIAGRAM ===
+    function drawBifurcationDiagram() {
+        const canvas = document.getElementById('bifurcation-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Set actual size
+        canvas.width = canvas.offsetWidth * 2;
+        canvas.height = canvas.offsetHeight * 2;
+        ctx.scale(2, 2);
+        
+        const width = canvas.offsetWidth;
+        const height = canvas.offsetHeight;
+        
+        // Clear
+        ctx.fillStyle = '#0a0a0f';
+        ctx.fillRect(0, 0, width, height);
+        
+        // Draw bifurcation points
+        ctx.fillStyle = 'rgba(74, 232, 232, 0.3)';
+        
+        // Simulate the bifurcation diagram
+        const bMin = 0.01;
+        const bMax = 1.0;
+        const xMin = -4;
+        const xMax = 4;
+        
+        // Pre-compute some orbits
+        for (let bPixel = 0; bPixel < width; bPixel++) {
+            const b = bMax - (bPixel / width) * (bMax - bMin);
+            
+            // Run a particle to find attractor
+            let state = [0.1, 0.1, 0.1];
+            
+            // Transient
+            for (let i = 0; i < 500; i++) {
+                state = rk4Step(state, b, 0.05);
+            }
+            
+            // Plot steady state
+            for (let i = 0; i < 100; i++) {
+                state = rk4Step(state, b, 0.05);
+                
+                const x = state[0];
+                const yPixel = height - ((x - xMin) / (xMax - xMin)) * height;
+                
+                if (yPixel >= 0 && yPixel < height) {
+                    ctx.fillRect(bPixel, yPixel, 1, 1);
+                }
+            }
+        }
+        
+        // Draw current b position
+        const currentBPixel = ((bMax - CONFIG.b) / (bMax - bMin)) * width;
+        ctx.strokeStyle = '#ff6b4a';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(currentBPixel, 0);
+        ctx.lineTo(currentBPixel, height);
+        ctx.stroke();
+        
+        // Add glow effect
+        ctx.strokeStyle = 'rgba(255, 107, 74, 0.3)';
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(currentBPixel, 0);
+        ctx.lineTo(currentBPixel, height);
+        ctx.stroke();
+    }
+
+    // === UI HANDLERS ===
+    function setBValue(value) {
+        CONFIG.b = value;
+        updateBSlider();
+        updateRegimeIndicator();
+        drawBifurcationDiagram();
+    }
+
+    function updateBSlider() {
+        document.getElementById('b-slider').value = CONFIG.b;
+        document.getElementById('b-display').textContent = CONFIG.b.toFixed(3);
+    }
+
+    function updateRegimeIndicator() {
+        const indicator = document.getElementById('regime-indicator');
+        let regime = '';
+        
+        if (CONFIG.b > 0.95) {
+            regime = 'Stable Origin';
+        } else if (CONFIG.b > 0.5) {
+            regime = 'Dual Fixed Points';
+        } else if (CONFIG.b > 0.329) {
+            regime = 'Approaching Hopf Bifurcation';
+        } else if (CONFIG.b > 0.25) {
+            regime = 'Limit Cycles';
+        } else if (CONFIG.b > 0.208) {
+            regime = 'Period Doubling Cascade';
+        } else if (CONFIG.b > 0.1) {
+            regime = 'Strange Attractor • Chaos';
+        } else if (CONFIG.b > 0.05) {
+            regime = 'Deep Chaos • Multi-Scroll';
+        } else {
+            regime = 'Labyrinth Chaos • Ergodic';
+        }
+        
+        indicator.textContent = regime;
+        drawBifurcationDiagram();
+    }
+
+    function toggleAutoAnimate() {
+        CONFIG.autoAnimate = !CONFIG.autoAnimate;
+        const btn = document.getElementById('play-btn');
+        const icon = document.getElementById('play-icon');
+        const text = document.getElementById('play-text');
+        
+        if (CONFIG.autoAnimate) {
+            btn.classList.add('active');
+            icon.textContent = '❚❚';
+            text.textContent = 'Pause';
+        } else {
+            btn.classList.remove('active');
+            icon.textContent = '▶';
+            text.textContent = 'Journey';
+        }
+    }
+
+    function resetJourney() {
+        CONFIG.b = 1.0;
+        CONFIG.animateDirection = -1;
+        updateBSlider();
+        updateRegimeIndicator();
+        particles.forEach(p => p.reset());
+    }
+
+    function toggleTrails() {
+        CONFIG.showTrails = !CONFIG.showTrails;
+        document.getElementById('toggle-trails').classList.toggle('active');
+        initTrailMeshes();
+        particles.forEach(p => p.trail = []);
+    }
+
+    function toggleMultiAttractor() {
+        CONFIG.multiAttractor = !CONFIG.multiAttractor;
+        document.getElementById('toggle-multi').classList.toggle('active');
+        initParticles();
+    }
+
+    function toggleBloom() {
+        CONFIG.bloomEnabled = !CONFIG.bloomEnabled;
+        document.getElementById('toggle-bloom').classList.toggle('active');
+        // Note: Full bloom would require post-processing setup
+        // This is a simplified version - the additive blending provides a glow-like effect
+    }
+
+    function toggleAutoRotate() {
+        CONFIG.autoRotate = !CONFIG.autoRotate;
+        document.getElementById('toggle-rotate').classList.toggle('active');
+    }
+    
+    function toggleThermal() {
+        CONFIG.thermalNoiseEnabled = !CONFIG.thermalNoiseEnabled;
+        if (CONFIG.thermalNoiseEnabled) {
+            document.getElementById('toggle-thermal').classList.add('active');
+        } else {
+            document.getElementById('toggle-thermal').classList.remove('active');
+        }
+    }
+
+    function loadPreset(name) {
+        const presets = {
+            stable: { b: 0.95, particles: 2000, trails: 50 },
+            hopf: { b: 0.33, particles: 3000, trails: 80 },
+            cascade: { b: 0.22, particles: 4000, trails: 100 },
+            chaos: { b: 0.19, particles: 3000, trails: 80 },
+            deep: { b: 0.1, particles: 5000, trails: 120 },
+            labyrinth: { b: 0.03, particles: 6000, trails: 150 }
+        };
+        
+        const preset = presets[name];
+        if (preset) {
+            CONFIG.b = preset.b;
+            CONFIG.particleCount = preset.particles;
+            CONFIG.trailLength = preset.trails;
+            
+            updateBSlider();
+            updateRegimeIndicator();
+            document.getElementById('particle-slider').value = preset.particles;
+            document.getElementById('particle-value').textContent = preset.particles;
+            document.getElementById('trail-slider').value = preset.trails;
+            document.getElementById('trail-value').textContent = preset.trails;
+            
+            initParticles();
+        }
+    }
+
+    function onResize() {
+        const container = document.getElementById('three-container');
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height);
+    }
+
+    // === INITIALIZE ===
+    function init() {
+        // Set up sliders
+        document.getElementById('b-slider').addEventListener('input', function() {
+            CONFIG.b = parseFloat(this.value);
+            document.getElementById('b-display').textContent = CONFIG.b.toFixed(3);
+            updateRegimeIndicator();
+        });
+        
+        document.getElementById('particle-slider').addEventListener('input', function() {
+            CONFIG.particleCount = parseInt(this.value);
+            document.getElementById('particle-value').textContent = this.value;
+            initParticles();
+        });
+        
+        document.getElementById('trail-slider').addEventListener('input', function() {
+            CONFIG.trailLength = parseInt(this.value);
+            document.getElementById('trail-value').textContent = this.value;
+            initTrailMeshes();
+        });
+        
+        document.getElementById('speed-slider').addEventListener('input', function() {
+            CONFIG.speedMultiplier = parseFloat(this.value);
+            document.getElementById('speed-value').textContent = this.value + 'x';
+        });
+        
+        // Initialize Three.js
+        initThree();
+        
+        // Draw initial bifurcation diagram
+        setTimeout(drawBifurcationDiagram, 100);
+        
+        // Start animation loop
+        animate();
+    }
+
+    // Start when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+    </script>
+</body>
+</html>

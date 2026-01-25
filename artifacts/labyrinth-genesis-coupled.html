@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<!--
+    LABYRINTH GENESIS: HETEROGENEOUS COUPLING
+    Deep coupling between Thomas, Lorenz, and Rössler attractors
+    
+    Based on: Boccaletti et al. "The synchronization of chaotic systems" 
+    Physics Reports 366 (2002) 1-101
+    
+    Coupling mechanism: Bidirectional diffusive coupling
+    ẋ = f(x) + ε·(y_mean - x)  [each attractor influenced by mean field of others]
+    
+    Key insight: Mean-field coupling is standard in literature for large populations
+    and avoids O(N²) computation while preserving emergent synchronization dynamics.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Labyrinth Genesis | Heterogeneous Coupling</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Crimson+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --void: #0a0a0f;
+            --void-light: #12121a;
+            --void-lighter: #1a1a25;
+            --text-primary: #e8e6f0;
+            --text-secondary: #8888a0;
+            --text-dim: #555566;
+            --thomas-color: #4ae8e8;
+            --lorenz-color: #ff6b4a;
+            --rossler-color: #9b4aff;
+            --accent-blend: #ff88aa;
+            --glow: rgba(74, 232, 232, 0.3);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--void);
+            color: var(--text-primary);
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        .container { display: flex; height: 100vh; }
+        
+        .sidebar {
+            width: 360px;
+            flex-shrink: 0;
+            background: linear-gradient(180deg, var(--void-light) 0%, var(--void) 100%);
+            border-right: 1px solid var(--void-lighter);
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: var(--void); }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--void-lighter); border-radius: 2px; }
+        
+        .header { margin-bottom: 24px; }
+        
+        .title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            background: linear-gradient(135deg, var(--thomas-color) 0%, var(--lorenz-color) 50%, var(--rossler-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 10px;
+            color: var(--text-secondary);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        
+        .section { margin-bottom: 20px; }
+        
+        .section-title {
+            font-size: 9px;
+            font-weight: 500;
+            color: var(--text-dim);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--void-lighter);
+        }
+        
+        /* Coupling Control Panel */
+        .coupling-panel {
+            background: var(--void-lighter);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .coupling-value {
+            font-size: 36px;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 4px;
+            font-family: 'Crimson Pro', serif;
+            background: linear-gradient(135deg, var(--thomas-color) 0%, var(--lorenz-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .coupling-label {
+            text-align: center;
+            font-size: 9px;
+            color: var(--text-dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        
+        .sync-indicator {
+            text-align: center;
+            font-size: 11px;
+            color: var(--accent-blend);
+            margin-bottom: 12px;
+            min-height: 16px;
+            padding: 4px 8px;
+            background: rgba(255, 136, 170, 0.1);
+            border-radius: 4px;
+        }
+        
+        /* Sliders */
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            background: var(--void);
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, var(--thomas-color) 0%, var(--lorenz-color) 100%);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--glow);
+        }
+        
+        .control-group { margin-bottom: 14px; }
+        
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        
+        .control-label span:first-child {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+        
+        .control-value {
+            font-size: 10px;
+            color: var(--thomas-color);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Attractor Toggles */
+        .attractor-toggles {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .attractor-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background: var(--void);
+            border-radius: 8px;
+            border: 1px solid var(--void-lighter);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .attractor-toggle:hover {
+            border-color: var(--text-dim);
+        }
+        
+        .attractor-toggle.active {
+            border-color: var(--thomas-color);
+        }
+        
+        .attractor-toggle.active.thomas { border-color: var(--thomas-color); }
+        .attractor-toggle.active.lorenz { border-color: var(--lorenz-color); }
+        .attractor-toggle.active.rossler { border-color: var(--rossler-color); }
+        
+        .attractor-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .attractor-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .attractor-dot.thomas { background: var(--thomas-color); }
+        .attractor-dot.lorenz { background: var(--lorenz-color); }
+        .attractor-dot.rossler { background: var(--rossler-color); }
+        
+        .attractor-name {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        
+        .attractor-count {
+            font-size: 10px;
+            color: var(--text-dim);
+        }
+        
+        /* Toggle Switch */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--void-lighter);
+        }
+        
+        .toggle-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+        
+        .toggle {
+            width: 40px;
+            height: 20px;
+            background: var(--void);
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .toggle.active {
+            background: linear-gradient(135deg, var(--thomas-color) 0%, var(--lorenz-color) 100%);
+        }
+        
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: var(--text-primary);
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s;
+        }
+        
+        .toggle.active::after {
+            transform: translateX(20px);
+        }
+        
+        /* Coupling Matrix Visualization */
+        .coupling-matrix {
+            display: grid;
+            grid-template-columns: auto 1fr 1fr 1fr;
+            gap: 4px;
+            font-size: 9px;
+            margin-top: 12px;
+        }
+        
+        .matrix-cell {
+            padding: 6px;
+            text-align: center;
+            background: var(--void);
+            border-radius: 4px;
+        }
+        
+        .matrix-header {
+            color: var(--text-dim);
+            font-weight: 500;
+        }
+        
+        .matrix-value {
+            color: var(--thomas-color);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Equations */
+        .equations {
+            font-size: 10px;
+            color: var(--text-dim);
+            line-height: 1.6;
+            background: var(--void);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: auto;
+        }
+        
+        .equation {
+            margin-bottom: 8px;
+        }
+        
+        .eq-name {
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        
+        .eq-name.thomas { color: var(--thomas-color); }
+        .eq-name.lorenz { color: var(--lorenz-color); }
+        .eq-name.rossler { color: var(--rossler-color); }
+        
+        /* Canvas Area */
+        .canvas-area {
+            flex: 1;
+            position: relative;
+            background: var(--void);
+        }
+        
+        #three-container { width: 100%; height: 100%; }
+        
+        .stats-overlay {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 9px;
+            color: var(--text-dim);
+            text-align: right;
+            pointer-events: none;
+        }
+        
+        .stat-row { margin-bottom: 3px; }
+        
+        .centroid-display {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            font-size: 9px;
+            color: var(--text-dim);
+            pointer-events: none;
+            background: rgba(10, 10, 15, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .centroid-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        
+        .centroid-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+        
+        .instructions {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: var(--text-dim);
+            letter-spacing: 0.1em;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--void-lighter);
+            border-top-color: var(--thomas-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="header">
+                <h1 class="title">Labyrinth Genesis</h1>
+                <p class="subtitle">Heterogeneous Attractor Coupling</p>
+            </div>
+            
+            <!-- Coupling Strength Control -->
+            <div class="coupling-panel">
+                <div class="coupling-value" id="coupling-display">0.050</div>
+                <div class="coupling-label">Coupling Strength (ε)</div>
+                <div class="sync-indicator" id="sync-indicator">Weak Coupling • Independent Dynamics</div>
+                
+                <input type="range" id="coupling-slider" min="0" max="0.5" step="0.005" value="0.05">
+                
+                <div class="control-group" style="margin-top: 12px;">
+                    <div class="control-label">
+                        <span>Coupling Asymmetry</span>
+                        <span class="control-value" id="asymmetry-value">1.0</span>
+                    </div>
+                    <input type="range" id="asymmetry-slider" min="0.1" max="3.0" step="0.1" value="1.0">
+                </div>
+            </div>
+            
+            <!-- Active Attractors -->
+            <div class="section">
+                <div class="section-title">Active Attractors</div>
+                <div class="attractor-toggles">
+                    <div class="attractor-toggle active thomas" id="toggle-thomas" onclick="toggleAttractor('thomas')">
+                        <div class="attractor-info">
+                            <div class="attractor-dot thomas"></div>
+                            <span class="attractor-name">Thomas</span>
+                        </div>
+                        <span class="attractor-count" id="count-thomas">1500</span>
+                    </div>
+                    <div class="attractor-toggle active lorenz" id="toggle-lorenz" onclick="toggleAttractor('lorenz')">
+                        <div class="attractor-info">
+                            <div class="attractor-dot lorenz"></div>
+                            <span class="attractor-name">Lorenz</span>
+                        </div>
+                        <span class="attractor-count" id="count-lorenz">1500</span>
+                    </div>
+                    <div class="attractor-toggle rossler" id="toggle-rossler" onclick="toggleAttractor('rossler')">
+                        <div class="attractor-info">
+                            <div class="attractor-dot rossler"></div>
+                            <span class="attractor-name">Rössler</span>
+                        </div>
+                        <span class="attractor-count" id="count-rossler">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Attractor Parameters -->
+            <div class="section">
+                <div class="section-title">Attractor Parameters</div>
+                
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Thomas b</span>
+                        <span class="control-value" id="thomas-b-value">0.190</span>
+                    </div>
+                    <input type="range" id="thomas-b-slider" min="0.01" max="0.5" step="0.005" value="0.19">
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Lorenz ρ</span>
+                        <span class="control-value" id="lorenz-rho-value">28.0</span>
+                    </div>
+                    <input type="range" id="lorenz-rho-slider" min="10" max="50" step="0.5" value="28">
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Rössler a</span>
+                        <span class="control-value" id="rossler-a-value">0.200</span>
+                    </div>
+                    <input type="range" id="rossler-a-slider" min="0.1" max="0.4" step="0.01" value="0.2">
+                </div>
+            </div>
+            
+            <!-- Visualization -->
+            <div class="section">
+                <div class="section-title">Visualization</div>
+                
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Particles per Attractor</span>
+                        <span class="control-value" id="particle-value">1500</span>
+                    </div>
+                    <input type="range" id="particle-slider" min="500" max="5000" step="250" value="1500">
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Trail Length</span>
+                        <span class="control-value" id="trail-value">60</span>
+                    </div>
+                    <input type="range" id="trail-slider" min="0" max="150" step="10" value="60">
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Time Scale</span>
+                        <span class="control-value" id="speed-value">1.0x</span>
+                    </div>
+                    <input type="range" id="speed-slider" min="0.2" max="3.0" step="0.1" value="1.0">
+                </div>
+            </div>
+            
+            <!-- Display Options -->
+            <div class="section">
+                <div class="section-title">Display</div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Show Trails</span>
+                    <div class="toggle active" id="toggle-trails" onclick="toggleTrails()"></div>
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Show Centroids</span>
+                    <div class="toggle active" id="toggle-centroids" onclick="toggleCentroids()"></div>
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Auto-Rotate</span>
+                    <div class="toggle active" id="toggle-rotate" onclick="toggleAutoRotate()"></div>
+                </div>
+                
+                <div class="toggle-container">
+                    <span class="toggle-label">Normalize Scale</span>
+                    <div class="toggle active" id="toggle-normalize" onclick="toggleNormalize()"></div>
+                </div>
+            </div>
+            
+            <!-- Equations Reference -->
+            <div class="equations">
+                <div class="equation">
+                    <div class="eq-name thomas">Thomas (cyclic, gentle chaos)</div>
+                    <div>ẋ = sin(y) - bx + ε(ȳ - x)</div>
+                </div>
+                <div class="equation">
+                    <div class="eq-name lorenz">Lorenz (butterfly, vigorous)</div>
+                    <div>ẋ = σ(y-x), ẏ = x(ρ-z)-y, ż = xy-βz</div>
+                </div>
+                <div class="equation">
+                    <div class="eq-name rossler">Rössler (spiral, slow chaos)</div>
+                    <div>ẋ = -y-z, ẏ = x+ay, ż = b+z(x-c)</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="canvas-area">
+            <div id="three-container">
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                    <div>Initializing Coupled Systems...</div>
+                </div>
+            </div>
+            
+            <div class="stats-overlay">
+                <div class="stat-row" id="stat-fps">FPS: --</div>
+                <div class="stat-row" id="stat-particles">Total: --</div>
+                <div class="stat-row" id="stat-sync">Sync: --</div>
+            </div>
+            
+            <div class="centroid-display" id="centroid-display">
+                <div class="centroid-row">
+                    <div class="centroid-dot" style="background: var(--thomas-color)"></div>
+                    <span id="centroid-thomas">Thomas: (0.0, 0.0, 0.0)</span>
+                </div>
+                <div class="centroid-row">
+                    <div class="centroid-dot" style="background: var(--lorenz-color)"></div>
+                    <span id="centroid-lorenz">Lorenz: (0.0, 0.0, 0.0)</span>
+                </div>
+                <div class="centroid-row">
+                    <div class="centroid-dot" style="background: var(--rossler-color)"></div>
+                    <span id="centroid-rossler">Rössler: (0.0, 0.0, 0.0)</span>
+                </div>
+            </div>
+            
+            <div class="instructions">
+                Drag to rotate • Scroll to zoom • Coupling creates emergent synchronization
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ═══════════════════════════════════════════════════════════════════════════
+    // LABYRINTH GENESIS: HETEROGENEOUS ATTRACTOR COUPLING
+    // Based on Boccaletti et al. Physics Reports 366 (2002) 1-101
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const CONFIG = {
+        // Coupling parameters (from literature)
+        couplingStrength: 0.05,      // ε in diffusive coupling
+        couplingAsymmetry: 1.0,      // Asymmetric coupling factor
+        
+        // Active attractors
+        attractors: {
+            thomas: true,
+            lorenz: true,
+            rossler: false
+        },
+        
+        // Thomas parameters (λ_max ≈ 0.09)
+        thomas: { b: 0.19 },
+        
+        // Lorenz parameters (λ_max ≈ 0.9, classic values)
+        lorenz: { sigma: 10, rho: 28, beta: 8/3 },
+        
+        // Rössler parameters (λ_max ≈ 0.07)
+        rossler: { a: 0.2, b: 0.2, c: 5.7 },
+        
+        // Scale factors (normalize to similar visual ranges)
+        // Thomas: natural range ~[-4, 4], Lorenz: ~[-20, 20], Rössler: ~[-10, 10]
+        scales: {
+            thomas: 1.0,
+            lorenz: 0.15,    // Scale down Lorenz by ~6x
+            rossler: 0.3     // Scale down Rössler by ~3x
+        },
+        normalizeScale: true,
+        
+        // Visualization
+        particlesPerAttractor: 1500,
+        trailLength: 60,
+        speedMultiplier: 1.0,
+        dt: 0.01,
+        
+        // Display
+        showTrails: true,
+        showCentroids: true,
+        autoRotate: true,
+        
+        // Colors
+        colors: {
+            thomas: new THREE.Color(0x4ae8e8),
+            lorenz: new THREE.Color(0xff6b4a),
+            rossler: new THREE.Color(0x9b4aff),
+            background: new THREE.Color(0x0a0a0f)
+        },
+        
+        cameraDistance: 15
+    };
+
+    // Global state
+    let scene, camera, renderer;
+    let particles = { thomas: [], lorenz: [], rossler: [] };
+    let centroids = { thomas: [0,0,0], lorenz: [0,0,0], rossler: [0,0,0] };
+    let centroidMeshes = {};
+    let pointsMeshes = {};
+    let trailMeshes = {};
+    let frameCount = 0;
+    let lastTime = performance.now();
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ATTRACTOR DYNAMICS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // Thomas: ẋ = sin(y) - bx, ẏ = sin(z) - by, ż = sin(x) - bz
+    function thomasDerivatives(state, b) {
+        return [
+            Math.sin(state[1]) - b * state[0],
+            Math.sin(state[2]) - b * state[1],
+            Math.sin(state[0]) - b * state[2]
+        ];
+    }
+
+    // Lorenz: ẋ = σ(y-x), ẏ = x(ρ-z)-y, ż = xy-βz
+    function lorenzDerivatives(state, params) {
+        const [x, y, z] = state;
+        const { sigma, rho, beta } = params;
+        return [
+            sigma * (y - x),
+            x * (rho - z) - y,
+            x * y - beta * z
+        ];
+    }
+
+    // Rössler: ẋ = -y-z, ẏ = x+ay, ż = b+z(x-c)
+    function rosslerDerivatives(state, params) {
+        const [x, y, z] = state;
+        const { a, b, c } = params;
+        return [
+            -y - z,
+            x + a * y,
+            b + z * (x - c)
+        ];
+    }
+
+    // RK4 integration with coupling term
+    function rk4Step(state, derivFn, params, dt, couplingTerm = [0,0,0]) {
+        const k1 = derivFn(state, params);
+        
+        const s2 = state.map((v, i) => v + (k1[i] + couplingTerm[i]) * dt * 0.5);
+        const k2 = derivFn(s2, params);
+        
+        const s3 = state.map((v, i) => v + (k2[i] + couplingTerm[i]) * dt * 0.5);
+        const k3 = derivFn(s3, params);
+        
+        const s4 = state.map((v, i) => v + (k3[i] + couplingTerm[i]) * dt);
+        const k4 = derivFn(s4, params);
+        
+        return state.map((v, i) => 
+            v + (k1[i] + 2*k2[i] + 2*k3[i] + k4[i] + 6*couplingTerm[i]) * dt / 6
+        );
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // COUPLING MECHANISM (Boccaletti Eq. 2.6 - Bidirectional Diffusive)
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function computeCentroids() {
+        // Compute mean position (centroid) for each attractor population
+        for (const type of ['thomas', 'lorenz', 'rossler']) {
+            if (!CONFIG.attractors[type] || particles[type].length === 0) {
+                centroids[type] = [0, 0, 0];
+                continue;
+            }
+            
+            let cx = 0, cy = 0, cz = 0;
+            const scale = CONFIG.normalizeScale ? CONFIG.scales[type] : 1;
+            
+            for (const p of particles[type]) {
+                // Use scaled coordinates for coupling
+                cx += p.state[0] * scale;
+                cy += p.state[1] * scale;
+                cz += p.state[2] * scale;
+            }
+            
+            const n = particles[type].length;
+            centroids[type] = [cx/n, cy/n, cz/n];
+        }
+    }
+
+    function computeCouplingTerm(particleState, particleType) {
+        // Mean-field diffusive coupling: ε * Σ(other_centroid - my_state)
+        // This is the standard approach from Boccaletti for large populations
+        
+        const ε = CONFIG.couplingStrength;
+        if (ε === 0) return [0, 0, 0];
+        
+        const scale = CONFIG.normalizeScale ? CONFIG.scales[particleType] : 1;
+        const myScaled = particleState.map(v => v * scale);
+        
+        let coupling = [0, 0, 0];
+        let activeCount = 0;
+        
+        for (const otherType of ['thomas', 'lorenz', 'rossler']) {
+            if (otherType === particleType) continue;
+            if (!CONFIG.attractors[otherType] || particles[otherType].length === 0) continue;
+            
+            // Asymmetric coupling: Lorenz influences others more strongly
+            let asymmetry = 1.0;
+            if (otherType === 'lorenz') {
+                asymmetry = CONFIG.couplingAsymmetry;
+            }
+            
+            // Diffusive coupling to other population's centroid
+            coupling[0] += asymmetry * (centroids[otherType][0] - myScaled[0]);
+            coupling[1] += asymmetry * (centroids[otherType][1] - myScaled[1]);
+            coupling[2] += asymmetry * (centroids[otherType][2] - myScaled[2]);
+            activeCount++;
+        }
+        
+        if (activeCount === 0) return [0, 0, 0];
+        
+        // Scale coupling back to particle's native coordinate system
+        return coupling.map(v => ε * v / (scale * activeCount));
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // PARTICLE CLASS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    class Particle {
+        constructor(type) {
+            this.type = type;
+            this.reset();
+        }
+        
+        reset() {
+            // Initialize in attractor's natural range
+            const ranges = {
+                thomas: 2,
+                lorenz: 15,
+                rossler: 8
+            };
+            const r = ranges[this.type];
+            
+            this.state = [
+                (Math.random() - 0.5) * r,
+                (Math.random() - 0.5) * r,
+                this.type === 'lorenz' ? Math.random() * 25 + 10 : (Math.random() - 0.5) * r
+            ];
+            
+            this.trail = [];
+            this.age = 0;
+        }
+        
+        update() {
+            const dt = CONFIG.dt * CONFIG.speedMultiplier;
+            
+            // Compute coupling term from other attractor populations
+            const coupling = computeCouplingTerm(this.state, this.type);
+            
+            // Choose dynamics based on type
+            let derivFn, params;
+            switch (this.type) {
+                case 'thomas':
+                    derivFn = thomasDerivatives;
+                    params = CONFIG.thomas.b;
+                    break;
+                case 'lorenz':
+                    derivFn = lorenzDerivatives;
+                    params = CONFIG.lorenz;
+                    break;
+                case 'rossler':
+                    derivFn = rosslerDerivatives;
+                    params = CONFIG.rossler;
+                    break;
+            }
+            
+            // Multiple substeps for stability
+            const steps = this.type === 'lorenz' ? 3 : 2;
+            for (let i = 0; i < steps; i++) {
+                this.state = rk4Step(this.state, derivFn, params, dt/steps, coupling.map(c => c/steps));
+            }
+            
+            // Check for numerical explosion
+            const mag = Math.sqrt(this.state[0]**2 + this.state[1]**2 + this.state[2]**2);
+            const maxMag = { thomas: 50, lorenz: 200, rossler: 150 }[this.type];
+            if (mag > maxMag || isNaN(mag)) {
+                this.reset();
+                return;
+            }
+            
+            // Update trail
+            if (CONFIG.showTrails && CONFIG.trailLength > 0) {
+                this.trail.push([...this.state]);
+                while (this.trail.length > CONFIG.trailLength) {
+                    this.trail.shift();
+                }
+            }
+            
+            this.age++;
+        }
+        
+        getScaledPosition() {
+            const scale = CONFIG.normalizeScale ? CONFIG.scales[this.type] : 1;
+            return this.state.map(v => v * scale);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // THREE.JS SETUP
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function initThree() {
+        const container = document.getElementById('three-container');
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        
+        scene = new THREE.Scene();
+        scene.background = CONFIG.colors.background;
+        
+        camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
+        camera.position.set(
+            CONFIG.cameraDistance * 0.8,
+            CONFIG.cameraDistance * 0.6,
+            CONFIG.cameraDistance * 0.8
+        );
+        camera.lookAt(0, 0, 0);
+        
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+        
+        document.getElementById('loading').style.display = 'none';
+        
+        initParticles();
+        initCentroidMarkers();
+        initControls();
+        
+        window.addEventListener('resize', onResize);
+    }
+
+    function initParticles() {
+        // Clear existing
+        for (const type of ['thomas', 'lorenz', 'rossler']) {
+            if (pointsMeshes[type]) scene.remove(pointsMeshes[type]);
+            if (trailMeshes[type]) scene.remove(trailMeshes[type]);
+            particles[type] = [];
+        }
+        
+        // Create particles for active attractors
+        for (const type of ['thomas', 'lorenz', 'rossler']) {
+            if (!CONFIG.attractors[type]) continue;
+            
+            for (let i = 0; i < CONFIG.particlesPerAttractor; i++) {
+                particles[type].push(new Particle(type));
+            }
+            
+            // Create point mesh
+            const positions = new Float32Array(particles[type].length * 3);
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            
+            const material = new THREE.PointsMaterial({
+                size: 0.04,
+                color: CONFIG.colors[type],
+                transparent: true,
+                opacity: 0.85,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            
+            pointsMeshes[type] = new THREE.Points(geometry, material);
+            scene.add(pointsMeshes[type]);
+            
+            // Create trail mesh
+            if (CONFIG.showTrails && CONFIG.trailLength > 0) {
+                const trailGeometry = new THREE.BufferGeometry();
+                const maxPoints = particles[type].length * CONFIG.trailLength * 2;
+                const trailPositions = new Float32Array(maxPoints * 3);
+                const trailColors = new Float32Array(maxPoints * 3);
+                
+                trailGeometry.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3));
+                trailGeometry.setAttribute('color', new THREE.BufferAttribute(trailColors, 3));
+                
+                const trailMaterial = new THREE.LineBasicMaterial({
+                    vertexColors: true,
+                    transparent: true,
+                    opacity: 0.3,
+                    blending: THREE.AdditiveBlending,
+                    depthWrite: false
+                });
+                
+                trailMeshes[type] = new THREE.LineSegments(trailGeometry, trailMaterial);
+                scene.add(trailMeshes[type]);
+            }
+        }
+        
+        updateParticleCounts();
+    }
+
+    function initCentroidMarkers() {
+        for (const type of ['thomas', 'lorenz', 'rossler']) {
+            if (centroidMeshes[type]) scene.remove(centroidMeshes[type]);
+            
+            const geometry = new THREE.SphereGeometry(0.15, 16, 16);
+            const material = new THREE.MeshBasicMaterial({
+                color: CONFIG.colors[type],
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            centroidMeshes[type] = new THREE.Mesh(geometry, material);
+            centroidMeshes[type].visible = CONFIG.showCentroids && CONFIG.attractors[type];
+            scene.add(centroidMeshes[type]);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // CONTROLS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    let isDragging = false;
+    let spherical = { theta: Math.PI / 4, phi: Math.PI / 3, radius: CONFIG.cameraDistance };
+
+    function initControls() {
+        const canvas = renderer.domElement;
+        let prevMouse = { x: 0, y: 0 };
+        
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            prevMouse = { x: e.clientX, y: e.clientY };
+        });
+        
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            const dx = e.clientX - prevMouse.x;
+            const dy = e.clientY - prevMouse.y;
+            
+            spherical.theta -= dx * 0.005;
+            spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi - dy * 0.005));
+            
+            updateCamera();
+            prevMouse = { x: e.clientX, y: e.clientY };
+        });
+        
+        canvas.addEventListener('mouseup', () => isDragging = false);
+        canvas.addEventListener('mouseleave', () => isDragging = false);
+        
+        canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            spherical.radius = Math.max(5, Math.min(50, spherical.radius + e.deltaY * 0.02));
+            updateCamera();
+        });
+        
+        canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+        
+        // Setup UI controls
+        setupUIControls();
+    }
+
+    function updateCamera() {
+        camera.position.x = spherical.radius * Math.sin(spherical.phi) * Math.cos(spherical.theta);
+        camera.position.y = spherical.radius * Math.cos(spherical.phi);
+        camera.position.z = spherical.radius * Math.sin(spherical.phi) * Math.sin(spherical.theta);
+        camera.lookAt(0, 0, 0);
+    }
+
+    function setupUIControls() {
+        // Coupling
+        document.getElementById('coupling-slider').addEventListener('input', function() {
+            CONFIG.couplingStrength = parseFloat(this.value);
+            document.getElementById('coupling-display').textContent = CONFIG.couplingStrength.toFixed(3);
+            updateSyncIndicator();
+        });
+        
+        document.getElementById('asymmetry-slider').addEventListener('input', function() {
+            CONFIG.couplingAsymmetry = parseFloat(this.value);
+            document.getElementById('asymmetry-value').textContent = this.value;
+        });
+        
+        // Attractor parameters
+        document.getElementById('thomas-b-slider').addEventListener('input', function() {
+            CONFIG.thomas.b = parseFloat(this.value);
+            document.getElementById('thomas-b-value').textContent = this.value;
+        });
+        
+        document.getElementById('lorenz-rho-slider').addEventListener('input', function() {
+            CONFIG.lorenz.rho = parseFloat(this.value);
+            document.getElementById('lorenz-rho-value').textContent = this.value;
+        });
+        
+        document.getElementById('rossler-a-slider').addEventListener('input', function() {
+            CONFIG.rossler.a = parseFloat(this.value);
+            document.getElementById('rossler-a-value').textContent = this.value;
+        });
+        
+        // Visualization
+        document.getElementById('particle-slider').addEventListener('input', function() {
+            CONFIG.particlesPerAttractor = parseInt(this.value);
+            document.getElementById('particle-value').textContent = this.value;
+            initParticles();
+        });
+        
+        document.getElementById('trail-slider').addEventListener('input', function() {
+            CONFIG.trailLength = parseInt(this.value);
+            document.getElementById('trail-value').textContent = this.value;
+            // Clear trails
+            for (const type of ['thomas', 'lorenz', 'rossler']) {
+                particles[type].forEach(p => p.trail = []);
+            }
+        });
+        
+        document.getElementById('speed-slider').addEventListener('input', function() {
+            CONFIG.speedMultiplier = parseFloat(this.value);
+            document.getElementById('speed-value').textContent = this.value + 'x';
+        });
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // TOGGLE FUNCTIONS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function toggleAttractor(type) {
+        CONFIG.attractors[type] = !CONFIG.attractors[type];
+        document.getElementById(`toggle-${type}`).classList.toggle('active');
+        initParticles();
+        
+        if (centroidMeshes[type]) {
+            centroidMeshes[type].visible = CONFIG.showCentroids && CONFIG.attractors[type];
+        }
+    }
+
+    function toggleTrails() {
+        CONFIG.showTrails = !CONFIG.showTrails;
+        document.getElementById('toggle-trails').classList.toggle('active');
+        
+        for (const type of ['thomas', 'lorenz', 'rossler']) {
+            if (trailMeshes[type]) {
+                trailMeshes[type].visible = CONFIG.showTrails;
+            }
+            particles[type].forEach(p => p.trail = []);
+        }
+    }
+
+    function toggleCentroids() {
+        CONFIG.showCentroids = !CONFIG.showCentroids;
+        document.getElementById('toggle-centroids').classList.toggle('active');
+        
+        for (const type of ['thomas', 'lorenz', 'rossler']) {
+            if (centroidMeshes[type]) {
+                centroidMeshes[type].visible = CONFIG.showCentroids && CONFIG.attractors[type];
+            }
+        }
+    }
+
+    function toggleAutoRotate() {
+        CONFIG.autoRotate = !CONFIG.autoRotate;
+        document.getElementById('toggle-rotate').classList.toggle('active');
+    }
+
+    function toggleNormalize() {
+        CONFIG.normalizeScale = !CONFIG.normalizeScale;
+        document.getElementById('toggle-normalize').classList.toggle('active');
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ANIMATION LOOP
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function animate() {
+        requestAnimationFrame(animate);
+        
+        // FPS counter
+        frameCount++;
+        const now = performance.now();
+        if (now - lastTime >= 1000) {
+            document.getElementById('stat-fps').textContent = `FPS: ${frameCount}`;
+            frameCount = 0;
+            lastTime = now;
+        }
+        
+        // Auto-rotate
+        if (CONFIG.autoRotate && !isDragging) {
+            spherical.theta += 0.001;
+            updateCamera();
+        }
+        
+        // Compute centroids for coupling
+        computeCentroids();
+        
+        // Update particles
+        let totalParticles = 0;
+        for (const type of ['thomas', 'lorenz', 'rossler']) {
+            if (!CONFIG.attractors[type]) continue;
+            
+            particles[type].forEach(p => p.update());
+            totalParticles += particles[type].length;
+            
+            // Update point positions
+            const positions = pointsMeshes[type].geometry.attributes.position.array;
+            particles[type].forEach((p, i) => {
+                const pos = p.getScaledPosition();
+                positions[i * 3] = pos[0];
+                positions[i * 3 + 1] = pos[1];
+                positions[i * 3 + 2] = pos[2];
+            });
+            pointsMeshes[type].geometry.attributes.position.needsUpdate = true;
+            
+            // Update trails
+            if (CONFIG.showTrails && trailMeshes[type]) {
+                updateTrails(type);
+            }
+            
+            // Update centroid marker
+            if (centroidMeshes[type] && centroidMeshes[type].visible) {
+                centroidMeshes[type].position.set(
+                    centroids[type][0],
+                    centroids[type][1],
+                    centroids[type][2]
+                );
+            }
+        }
+        
+        // Update stats
+        document.getElementById('stat-particles').textContent = `Total: ${totalParticles}`;
+        
+        // Update centroid display
+        updateCentroidDisplay();
+        
+        // Compute sync metric
+        updateSyncMetric();
+        
+        renderer.render(scene, camera);
+    }
+
+    function updateTrails(type) {
+        const geometry = trailMeshes[type].geometry;
+        const positions = geometry.attributes.position.array;
+        const colors = geometry.attributes.color.array;
+        const color = CONFIG.colors[type];
+        const scale = CONFIG.normalizeScale ? CONFIG.scales[type] : 1;
+        
+        let idx = 0;
+        for (const p of particles[type]) {
+            if (p.trail.length < 2) continue;
+            
+            for (let i = 0; i < p.trail.length - 1 && idx < positions.length / 3 - 2; i++) {
+                const alpha = i / p.trail.length;
+                
+                // Start point
+                positions[idx * 3] = p.trail[i][0] * scale;
+                positions[idx * 3 + 1] = p.trail[i][1] * scale;
+                positions[idx * 3 + 2] = p.trail[i][2] * scale;
+                colors[idx * 3] = color.r * alpha;
+                colors[idx * 3 + 1] = color.g * alpha;
+                colors[idx * 3 + 2] = color.b * alpha;
+                idx++;
+                
+                // End point
+                positions[idx * 3] = p.trail[i+1][0] * scale;
+                positions[idx * 3 + 1] = p.trail[i+1][1] * scale;
+                positions[idx * 3 + 2] = p.trail[i+1][2] * scale;
+                colors[idx * 3] = color.r * alpha;
+                colors[idx * 3 + 1] = color.g * alpha;
+                colors[idx * 3 + 2] = color.b * alpha;
+                idx++;
+            }
+        }
+        
+        // Clear remaining
+        for (let i = idx * 3; i < positions.length; i++) {
+            positions[i] = 0;
+            colors[i] = 0;
+        }
+        
+        geometry.attributes.position.needsUpdate = true;
+        geometry.attributes.color.needsUpdate = true;
+        geometry.setDrawRange(0, idx);
+    }
+
+    function updateCentroidDisplay() {
+        if (!CONFIG.showCentroids) {
+            document.getElementById('centroid-display').style.display = 'none';
+            return;
+        }
+        document.getElementById('centroid-display').style.display = 'block';
+        
+        for (const type of ['thomas', 'lorenz', 'rossler']) {
+            const el = document.getElementById(`centroid-${type}`);
+            if (CONFIG.attractors[type]) {
+                const c = centroids[type];
+                el.textContent = `${type.charAt(0).toUpperCase() + type.slice(1)}: (${c[0].toFixed(1)}, ${c[1].toFixed(1)}, ${c[2].toFixed(1)})`;
+                el.parentElement.style.opacity = '1';
+            } else {
+                el.parentElement.style.opacity = '0.3';
+            }
+        }
+    }
+
+    function updateSyncMetric() {
+        // Compute correlation between centroids as rough sync metric
+        const active = ['thomas', 'lorenz', 'rossler'].filter(t => CONFIG.attractors[t]);
+        if (active.length < 2) {
+            document.getElementById('stat-sync').textContent = 'Sync: N/A';
+            return;
+        }
+        
+        // Distance between centroids
+        let totalDist = 0;
+        let pairs = 0;
+        for (let i = 0; i < active.length; i++) {
+            for (let j = i + 1; j < active.length; j++) {
+                const c1 = centroids[active[i]];
+                const c2 = centroids[active[j]];
+                const dist = Math.sqrt(
+                    (c1[0]-c2[0])**2 + (c1[1]-c2[1])**2 + (c1[2]-c2[2])**2
+                );
+                totalDist += dist;
+                pairs++;
+            }
+        }
+        
+        const avgDist = totalDist / pairs;
+        const syncScore = Math.max(0, 100 - avgDist * 10).toFixed(0);
+        document.getElementById('stat-sync').textContent = `Sync: ${syncScore}%`;
+    }
+
+    function updateSyncIndicator() {
+        const ε = CONFIG.couplingStrength;
+        const indicator = document.getElementById('sync-indicator');
+        
+        if (ε < 0.01) {
+            indicator.textContent = 'Uncoupled • Independent Dynamics';
+        } else if (ε < 0.05) {
+            indicator.textContent = 'Weak Coupling • Phase Influence';
+        } else if (ε < 0.15) {
+            indicator.textContent = 'Moderate Coupling • Partial Sync';
+        } else if (ε < 0.3) {
+            indicator.textContent = 'Strong Coupling • Generalized Sync';
+        } else {
+            indicator.textContent = 'Very Strong • Approaching Lock';
+        }
+    }
+
+    function updateParticleCounts() {
+        for (const type of ['thomas', 'lorenz', 'rossler']) {
+            document.getElementById(`count-${type}`).textContent = 
+                CONFIG.attractors[type] ? particles[type].length : '0';
+        }
+    }
+
+    function onResize() {
+        const container = document.getElementById('three-container');
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    // Initialize
+    function init() {
+        initThree();
+        updateSyncIndicator();
+        animate();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+    </script>
+</body>
+</html>

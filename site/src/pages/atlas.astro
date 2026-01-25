@@ -5,7 +5,7 @@
  * Interactive graph showing all worlds and their connections.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Atlas from '../components/atlas/Atlas';
+import { MyceliumScene } from '../components/atlas/MyceliumScene';
 import { getCollection } from 'astro:content';
 
 // Gather all worlds
@@ -17,7 +17,6 @@ const nodes = worlds.map(world => ({
   title: world.data.title,
   biome: world.data.biome,
   stage: world.data.stage,
-  summary: world.data.summary,
 }));
 
 // Extract edges from connections and choices
@@ -51,7 +50,7 @@ const graphData = { nodes, edges };
     </header>
 
     <div class="atlas-container">
-      <Atlas client:load graphData={graphData} />
+      <MyceliumScene client:load graphData={graphData} />
     </div>
 
     <footer class="atlas-hint">

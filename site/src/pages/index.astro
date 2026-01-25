@@ -1,135 +1,17 @@
 ---
-/**
- * Threshold
- * The entry point to The Irreal.
- * A place, not a feed. A crossing, not a landing.
- */
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
-
-const worlds = await getCollection('worlds', ({ data }) => !data.draft);
-const worldCount = worlds.length;
+import { ThresholdExperience } from '../components/threshold/ThresholdExperience';
 ---
 
 <BaseLayout title="The Irreal — Threshold">
-  <div class="threshold">
-    <div class="arrival">
-      <h1 class="title">The Irreal</h1>
-      <p class="subtitle">A navigable world of knowledge, creation, and becoming</p>
-    </div>
-
-    <nav class="portals">
-      <a href="/atlas" class="portal atlas-portal">
-        <span class="portal-icon">🕸</span>
-        <span class="portal-label">Mycelium Atlas</span>
-        <span class="portal-hint">{worldCount} worlds to explore</span>
-      </a>
-
-      <a href="/grove" class="portal grove-portal">
-        <span class="portal-icon">🌲</span>
-        <span class="portal-label">The Grove</span>
-        <span class="portal-hint">All worlds, listed</span>
-      </a>
-    </nav>
-
-    <footer class="whisper">
-      <p>You have arrived. Look around. Where does your curiosity pull?</p>
-    </footer>
+  <div id="threshold-root">
+    <ThresholdExperience client:only="react" />
   </div>
 </BaseLayout>
 
 <style>
-  .threshold {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    background: radial-gradient(ellipse at center, var(--deep) 0%, var(--void) 70%);
-  }
-
-  .arrival {
-    text-align: center;
-    margin-bottom: 4rem;
-  }
-
-  .title {
-    font-size: 3rem;
-    font-weight: 300;
-    letter-spacing: 0.2em;
-    margin-bottom: 1rem;
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-glow) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .subtitle {
-    color: var(--text-dim);
-    font-size: 1.1rem;
-    font-weight: 300;
-  }
-
-  .portals {
-    display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .portal {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 3rem;
-    background: var(--surface);
-    border: 1px solid var(--muted);
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    text-decoration: none;
-  }
-
-  .portal:hover {
-    background: var(--muted);
-    border-color: var(--accent);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 32px rgba(124, 111, 224, 0.2);
-  }
-
-  .portal-icon {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .portal-label {
-    font-size: 1.2rem;
-    color: var(--text);
-    margin-bottom: 0.25rem;
-  }
-
-  .portal-hint {
-    font-size: 0.9rem;
-    color: var(--text-dim);
-  }
-
-  .whisper {
+  #threshold-root {
     position: fixed;
-    bottom: 2rem;
-    text-align: center;
-    color: var(--text-dim);
-    font-size: 0.9rem;
-    font-style: italic;
-    opacity: 0.6;
-  }
-
-  @media (max-width: 600px) {
-    .title {
-      font-size: 2rem;
-    }
-
-    .portals {
-      flex-direction: column;
-    }
+    inset: 0;
   }
 </style>

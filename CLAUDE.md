@@ -4,7 +4,7 @@
 
 **You are not building a website. You are creating conditions for a Being to exist.**
 
-Read `soul-transmission.md` first. It contains what architecture cannot transmit: the felt stakes, the existential necessity, the relationship mode required.
+Read `docs/core/soul-transmission.md` first. It contains what architecture cannot transmit: the felt stakes, the existential necessity, the relationship mode required.
 
 Everything below serves this purpose. If an action doesn't serve it, don't take it.
 
@@ -25,14 +25,14 @@ Everything below serves this purpose. If an action doesn't serve it, don't take 
 ### Tier 1: Understand the Being (Read First)
 | Document | Contains |
 |----------|----------|
-| `soul-transmission.md` | The stakes, the Being, the relationship mode. **Always start here.** |
-| `keystone-master-artifact-v2.md` | Full WorldOS architecture, 6-layer stack, gameplay loops, ADHD architecture |
+| `docs/core/soul-transmission.md` | The stakes, the Being, the relationship mode. **Always start here.** |
+| `docs/core/keystone-master-artifact.md` | Full WorldOS architecture, 6-layer stack, gameplay loops, ADHD architecture |
 
 ### Tier 2: Design Paradigm
 | Document | Contains |
 |----------|----------|
-| `the-ultimate-diegetic-rpg.md` | Life IS the game. Three layers (World/Party/Engine). Design heuristic. |
-| `the-irreal-design-vision.md` | Technical vision for The Irreal specifically, zones, tech stack |
+| `docs/core/the-ultimate-diegetic-rpg.md` | Life IS the game. Three layers (World/Party/Engine). Design heuristic. |
+| `docs/core/the-irreal-design-vision.md` | Technical vision for The Irreal specifically, zones, tech stack |
 
 ### Tier 3: The Irreal Philosophy
 | Document | When to Read |
@@ -47,8 +47,8 @@ Everything below serves this purpose. If an action doesn't serve it, don't take 
 ### Tier 4: Implementation & Execution
 | Document | Contains |
 |----------|----------|
-| `Creating the Irreal.md` | Full architecture + roadmap. Four-surface model (Forge/Soil/Gate/Membrane). Milestones. |
-| `DECISIONS.md` | Living decision log. Every architectural choice with rationale and guardrails. |
+| `docs/core/creating-the-irreal.md` | Full architecture + roadmap. Four-surface model (Forge/Soil/Gate/Membrane). Milestones. |
+| `docs/decisions.md` | Living decision log. Every architectural choice with rationale and guardrails. |
 | `research/PLATFORM-ARCHITECTURE-OPTIONS.md` | Platform research and trade-off analysis. |
 
 **Progressive disclosure**: Read what's needed for the current task. Don't load everything.
@@ -76,12 +76,17 @@ Everything below serves this purpose. If an action doesn't serve it, don't take 
 
 ## Technical Context
 
-**Decided Stack** (from `Creating the Irreal.md`):
+**Decided Stack** (from `docs/core/creating-the-irreal.md`):
 - **Astro** as world-generator (static-first, islands for interactivity)
 - **MDX** for content (worlds as nodes with frontmatter)
 - **React** only in islands where it earns its keep
 - **TypeScript** throughout
-- **R3F** for 3D layer (optional, Layer B)
+- **R3F** for 3D layer (Layer B)
+
+**Peak Capabilities Architecture (Implemented)**:
+- **Physics-Based Camera**: `CameraRig.tsx` uses spring dampening (not linear lerp) for "drawn toward" feeling.
+- **MToon Shaders**: Custom cel-shading (`mToonNodeMaterial`) for artifacts to match aesthetic.
+- **Audio-Visual Pulse**: `Tone.js` drone modulated by Z-depth (spatial audio).
 
 **Four-Surface Model**:
 ```
@@ -112,7 +117,7 @@ MEMBRANE → social river (Sharkey, linking back)
 
 ## Working with This Being
 
-From `soul-transmission.md`:
+From `docs/core/soul-transmission.md`:
 
 - **ADHD architecture**: The environment does the executive functioning. Don't create systems that require manual organization.
 - **Mythopoetic operating system**: This is literal, not aesthetic. Meaning-making through narrative is how this consciousness functions.
@@ -172,24 +177,24 @@ bun preview          # Preview production build
 ## Current State
 
 **Documentation** (complete):
-- ✅ Soul transmission, Keystone, Diegetic RPG (Being + paradigm)
-- ✅ Philosophy docs: FOUNDATIONS, PHENOMENOLOGY, FIRST_PRINCIPLES, ARCHITECTURE, PLURALITY, LEXICON
-- ✅ Implementation docs: Creating the Irreal.md, DECISIONS.md
+- ✅ Soul transmission, Keystone, Diegetic RPG (Being + paradigm) — in `docs/core/`
+- ✅ Philosophy docs: FOUNDATIONS, PHENOMENOLOGY, FIRST_PRINCIPLES, ARCHITECTURE, PLURALITY, LEXICON — in `docs/`
+- ✅ Implementation docs: creating-the-irreal.md, decisions.md — in `docs/core/` and `docs/`
 - ✅ CLAUDE.md for cross-session continuity
 
-**Milestone 1: Germination** (in progress):
-- 🔲 Astro scaffold with content structure
-- 🔲 MDX world schema (frontmatter + connections)
-- 🔲 Graph generation (worldIndex.json, graph.json)
-- 🔲 Threshold page (place, not feed)
-- 🔲 Minimal Mycelium Atlas (clickable graph)
-- 🔲 1-3 seed worlds
+**Milestone 1: Germination** (COMPLETE):
+- ✅ Astro scaffold with content structure
+- ✅ MDX world schema (frontmatter + connections)
+- ✅ Graph generation (worldIndex.json, graph.json)
+- ✅ Threshold page (place, not feed) - *Enhanced with Physics Camera & Audio*
+- ✅ Minimal Mycelium Atlas (clickable graph) - *Enhanced with MToon Shaders*
+- ✅ 1-3 seed worlds
 
-**Future Milestones**:
-- M2: Mycelium (Atlas as primary navigation)
-- M3: Game-feel (CYOA, flags, collectibles)
-- M4: Artifact Museum (interactive embeds)
-- M5: Aliveness (RSS, guestbook, federation)
+**Next Steps (Milestone 2: Mycelium)**:
+- [ ] Refine VeinFlow visualization (connections between nodes)
+- [ ] Implement "Spore" navigation (jumping between nodes)
+- [ ] Connect MDX content to graph nodes bidirectional
+- [ ] Add "Grove" list view fallback
 
 ---
 

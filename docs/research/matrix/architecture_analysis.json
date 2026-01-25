@@ -1,0 +1,512 @@
+[
+  {
+    "name": "exp-my-little-storybook.lusion.co",
+    "path": "research/awesome-sites/Pack01/game/exp-my-little-storybook.lusion.co",
+    "features": {},
+    "dependencies": []
+  },
+  {
+    "name": "bruno-simon.com",
+    "path": "research/awesome-sites/Pack01/portfolio/bruno-simon.com",
+    "features": {
+      "GAME_LOOP": [
+        "Delta",
+        "RAF"
+      ],
+      "PHYSICS": [
+        "Cannon"
+      ],
+      "CAMERA_RIG": [
+        "Damp",
+        "LookAt",
+        "OrbitControls",
+        "PointerLock",
+        "Spline",
+        "CatmullRom",
+        "Lerp"
+      ],
+      "STATE_MANAGEMENT": [
+        "Store"
+      ],
+      "RENDER_LOOP": [
+        "FBO",
+        "Offscreen",
+        "Worker",
+        "Instancing",
+        "PostProcessing"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "webxr-sneakers.lusion.co",
+    "path": "research/awesome-sites/Pack01/e-commerce/webxr-sneakers.lusion.co",
+    "features": {},
+    "dependencies": []
+  },
+  {
+    "name": "equinox.space",
+    "path": "research/awesome-sites/Pack06/games/equinox.space",
+    "features": {
+      "STATE_MANAGEMENT": [
+        "Store"
+      ],
+      "RENDER_LOOP": [
+        "Worker"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "pinball.cosmicshelter.com",
+    "path": "research/awesome-sites/Pack06/games/pinball.cosmicshelter.com",
+    "features": {
+      "GAME_LOOP": [
+        "Delta",
+        "RAF"
+      ],
+      "CAMERA_RIG": [
+        "Damp",
+        "LookAt",
+        "OrbitControls",
+        "PointerLock",
+        "Spline",
+        "CatmullRom",
+        "Lerp"
+      ],
+      "STATE_MANAGEMENT": [
+        "Store",
+        "Signal"
+      ],
+      "RENDER_LOOP": [
+        "FBO",
+        "Offscreen",
+        "Worker",
+        "Instancing",
+        "PostProcessing"
+      ],
+      "PHYSICS": [
+        "Matter"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "bfcm.shopify.com",
+    "path": "research/awesome-sites/Pack06/games/bfcm.shopify.com",
+    "features": {
+      "STATE_MANAGEMENT": [
+        "Store"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "egghunt.merci-michel.com:",
+    "path": "research/awesome-sites/Pack06/games/egghunt.merci-michel.com:",
+    "features": {},
+    "dependencies": []
+  },
+  {
+    "name": "labs.otherlife.xyz",
+    "path": "research/awesome-sites/Pack06/car/labs.otherlife.xyz",
+    "features": {
+      "GAME_LOOP": [
+        "Delta",
+        "RAF"
+      ],
+      "STATE_MANAGEMENT": [
+        "Context",
+        "Store",
+        "Signal"
+      ],
+      "RENDER_LOOP": [
+        "FBO",
+        "Offscreen",
+        "Worker",
+        "Instancing",
+        "PostProcessing"
+      ],
+      "CAMERA_RIG": [
+        "Damp",
+        "LookAt",
+        "OrbitControls",
+        "Spline",
+        "CatmullRom",
+        "Lerp"
+      ],
+      "PHYSICS": [
+        "Ammo",
+        "Matter"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "www.classics-garage.com",
+    "path": "research/awesome-sites/Pack06/car/www.classics-garage.com",
+    "features": {},
+    "dependencies": []
+  },
+  {
+    "name": "www.utsubo.com",
+    "path": "research/awesome-sites/Pack06/portfolio/www.utsubo.com",
+    "features": {
+      "GAME_LOOP": [
+        "Delta",
+        "RAF"
+      ],
+      "CAMERA_RIG": [
+        "Damp",
+        "LookAt",
+        "Lerp",
+        "Spline"
+      ],
+      "STATE_MANAGEMENT": [
+        "Store",
+        "Signal"
+      ],
+      "RENDER_LOOP": [
+        "Offscreen",
+        "Worker",
+        "Instancing",
+        "FBO"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "story.sector32.net",
+    "path": "research/awesome-sites/Pack06/portfolio/story.sector32.net",
+    "features": {
+      "STATE_MANAGEMENT": [
+        "Store"
+      ],
+      "GAME_LOOP": [
+        "Delta",
+        "RAF"
+      ],
+      "PHYSICS": [
+        "Matter"
+      ],
+      "CAMERA_RIG": [
+        "Damp",
+        "LookAt"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "www.sector32.net",
+    "path": "research/awesome-sites/Pack06/portfolio/www.sector32.net",
+    "features": {},
+    "dependencies": []
+  },
+  {
+    "name": "marchantweb.com",
+    "path": "research/awesome-sites/Pack06/portfolio/marchantweb.com",
+    "features": {
+      "STATE_MANAGEMENT": [
+        "Store",
+        "Signal"
+      ],
+      "GAME_LOOP": [
+        "Delta",
+        "FixedStep",
+        "RAF"
+      ],
+      "CAMERA_RIG": [
+        "Damp",
+        "LookAt",
+        "Spline",
+        "CatmullRom",
+        "Lerp"
+      ],
+      "RENDER_LOOP": [
+        "Offscreen",
+        "Worker",
+        "Instancing",
+        "FBO"
+      ],
+      "PHYSICS": [
+        "Matter"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "nanoshrineinteractive.com",
+    "path": "research/awesome-sites/Pack06/portfolio/nanoshrineinteractive.com",
+    "features": {
+      "GAME_LOOP": [
+        "Delta",
+        "RAF"
+      ],
+      "CAMERA_RIG": [
+        "Damp",
+        "LookAt",
+        "OrbitControls",
+        "PointerLock",
+        "Spline",
+        "CatmullRom",
+        "Lerp"
+      ],
+      "STATE_MANAGEMENT": [
+        "Zustand",
+        "Context",
+        "Store",
+        "Redux",
+        "Signal"
+      ],
+      "RENDER_LOOP": [
+        "Offscreen",
+        "Worker",
+        "Instancing",
+        "FBO"
+      ],
+      "PHYSICS": [
+        "Matter"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "membersexperience-create.lacoste.com",
+    "path": "research/awesome-sites/Pack06/tool/membersexperience-create.lacoste.com",
+    "features": {
+      "STATE_MANAGEMENT": [
+        "Store"
+      ],
+      "RENDER_LOOP": [
+        "Worker"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "svg.designcode.io",
+    "path": "research/awesome-sites/Pack06/tool/svg.designcode.io",
+    "features": {
+      "GAME_LOOP": [
+        "Delta",
+        "RAF"
+      ],
+      "STATE_MANAGEMENT": [
+        "Context",
+        "Store",
+        "EventEmitter",
+        "Signal"
+      ],
+      "RENDER_LOOP": [
+        "Worker"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "virtual.cleverfarm.ag",
+    "path": "research/awesome-sites/Pack06/other/virtual.cleverfarm.ag",
+    "features": {
+      "STATE_MANAGEMENT": [
+        "Store"
+      ],
+      "GAME_LOOP": [
+        "Delta"
+      ],
+      "CAMERA_RIG": [
+        "PointerLock"
+      ],
+      "RENDER_LOOP": [
+        "Worker"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "bidsforsurvival.com",
+    "path": "research/awesome-sites/Pack06/other/bidsforsurvival.com",
+    "features": {
+      "CAMERA_RIG": [
+        "Damp",
+        "LookAt",
+        "OrbitControls",
+        "Spline",
+        "CatmullRom",
+        "Lerp"
+      ],
+      "GAME_LOOP": [
+        "Delta",
+        "RAF"
+      ],
+      "PHYSICS": [
+        "Matter"
+      ],
+      "STATE_MANAGEMENT": [
+        "Store",
+        "Signal"
+      ],
+      "RENDER_LOOP": [
+        "Offscreen",
+        "Worker",
+        "Instancing",
+        "FBO"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "beat.noomoagency.com",
+    "path": "research/awesome-sites/Pack06/other/beat.noomoagency.com",
+    "features": {
+      "STATE_MANAGEMENT": [
+        "Store",
+        "Signal"
+      ],
+      "RENDER_LOOP": [
+        "FBO",
+        "Offscreen",
+        "Worker",
+        "Instancing",
+        "PostProcessing"
+      ],
+      "GAME_LOOP": [
+        "Delta",
+        "RAF"
+      ],
+      "CAMERA_RIG": [
+        "Damp",
+        "LookAt",
+        "OrbitControls",
+        "Spline",
+        "Lerp"
+      ],
+      "PHYSICS": [
+        "Matter"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "www.rspca.org.uk",
+    "path": "research/awesome-sites/Pack06/other/www.rspca.org.uk",
+    "features": {
+      "STATE_MANAGEMENT": [
+        "Store"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "kaizen.makemepulse.com",
+    "path": "research/awesome-sites/Pack06/other/kaizen.makemepulse.com",
+    "features": {
+      "CAMERA_RIG": [
+        "Damp",
+        "LookAt",
+        "Lerp",
+        "Spline"
+      ],
+      "STATE_MANAGEMENT": [
+        "Store",
+        "Redux",
+        "Signal"
+      ],
+      "GAME_LOOP": [
+        "Delta",
+        "RAF"
+      ],
+      "RENDER_LOOP": [
+        "Offscreen",
+        "Worker"
+      ],
+      "PHYSICS": [
+        "Matter"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "www.hatom.com",
+    "path": "research/awesome-sites/Pack06/other/www.hatom.com",
+    "features": {
+      "STATE_MANAGEMENT": [
+        "Store"
+      ],
+      "RENDER_LOOP": [
+        "Worker"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "www.kokuyo.com",
+    "path": "research/awesome-sites/Pack06/other/www.kokuyo.com",
+    "features": {},
+    "dependencies": []
+  },
+  {
+    "name": "followingwildfire.com",
+    "path": "research/awesome-sites/Pack06/other/followingwildfire.com",
+    "features": {
+      "PHYSICS": [
+        "Matter"
+      ],
+      "STATE_MANAGEMENT": [
+        "Zustand",
+        "Context",
+        "Store",
+        "Redux",
+        "Signal"
+      ],
+      "GAME_LOOP": [
+        "Delta",
+        "RAF"
+      ],
+      "RENDER_LOOP": [
+        "FBO",
+        "Offscreen",
+        "Worker",
+        "Instancing",
+        "PostProcessing"
+      ],
+      "CAMERA_RIG": [
+        "Damp",
+        "LookAt",
+        "OrbitControls",
+        "PointerLock",
+        "Spline",
+        "CatmullRom",
+        "Lerp"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "orion.adrianred.com",
+    "path": "research/awesome-sites/Pack06/metaverse/orion.adrianred.com",
+    "features": {
+      "GAME_LOOP": [
+        "Delta",
+        "RAF"
+      ],
+      "STATE_MANAGEMENT": [
+        "Store",
+        "Redux"
+      ],
+      "CAMERA_RIG": [
+        "Lerp",
+        "Spline"
+      ],
+      "RENDER_LOOP": [
+        "Worker"
+      ]
+    },
+    "dependencies": []
+  },
+  {
+    "name": "samsy.ninja",
+    "path": "research/awesome-sites/Pack06/metaverse/samsy.ninja",
+    "features": {},
+    "dependencies": []
+  }
+]
