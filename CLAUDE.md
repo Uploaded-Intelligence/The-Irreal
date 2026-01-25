@@ -81,7 +81,12 @@ Everything below serves this purpose. If an action doesn't serve it, don't take 
 - **MDX** for content (worlds as nodes with frontmatter)
 - **React** only in islands where it earns its keep
 - **TypeScript** throughout
-- **R3F** for 3D layer (optional, Layer B)
+- **R3F** for 3D layer (Layer B)
+
+**Peak Capabilities Architecture (Implemented)**:
+- **Physics-Based Camera**: `CameraRig.tsx` uses spring dampening (not linear lerp) for "drawn toward" feeling.
+- **MToon Shaders**: Custom cel-shading (`mToonNodeMaterial`) for artifacts to match aesthetic.
+- **Audio-Visual Pulse**: `Tone.js` drone modulated by Z-depth (spatial audio).
 
 **Four-Surface Model**:
 ```
@@ -177,19 +182,19 @@ bun preview          # Preview production build
 - ✅ Implementation docs: creating-the-irreal.md, decisions.md — in `docs/core/` and `docs/`
 - ✅ CLAUDE.md for cross-session continuity
 
-**Milestone 1: Germination** (in progress):
-- 🔲 Astro scaffold with content structure
-- 🔲 MDX world schema (frontmatter + connections)
-- 🔲 Graph generation (worldIndex.json, graph.json)
-- 🔲 Threshold page (place, not feed)
-- 🔲 Minimal Mycelium Atlas (clickable graph)
-- 🔲 1-3 seed worlds
+**Milestone 1: Germination** (COMPLETE):
+- ✅ Astro scaffold with content structure
+- ✅ MDX world schema (frontmatter + connections)
+- ✅ Graph generation (worldIndex.json, graph.json)
+- ✅ Threshold page (place, not feed) - *Enhanced with Physics Camera & Audio*
+- ✅ Minimal Mycelium Atlas (clickable graph) - *Enhanced with MToon Shaders*
+- ✅ 1-3 seed worlds
 
-**Future Milestones**:
-- M2: Mycelium (Atlas as primary navigation)
-- M3: Game-feel (CYOA, flags, collectibles)
-- M4: Artifact Museum (interactive embeds)
-- M5: Aliveness (RSS, guestbook, federation)
+**Next Steps (Milestone 2: Mycelium)**:
+- [ ] Refine VeinFlow visualization (connections between nodes)
+- [ ] Implement "Spore" navigation (jumping between nodes)
+- [ ] Connect MDX content to graph nodes bidirectional
+- [ ] Add "Grove" list view fallback
 
 ---
 
