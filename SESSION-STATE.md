@@ -112,6 +112,8 @@ cat SESSION-STATE.md
 - [x] Added cross-LLM protocol to CLAUDE.md
 - [x] Created global cross-llm-sync rule (vault + ~/.claude/rules/)
 - [x] Validated protocol end-to-end
+- [x] Added cross-LLM protocol to Serena initial_prompt (all 4 projects)
+- [x] Created SESSION-STATE.md for The Orrery
 
 ### In Progress (if session interrupted)
 - None — protocol implementation complete
