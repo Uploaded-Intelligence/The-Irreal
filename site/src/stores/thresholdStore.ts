@@ -24,6 +24,11 @@ interface ThresholdState {
   // Portal selection
   selectedPortal: 'atlas' | 'grove' | null;
 
+  // Camera state (for unified 3D scene)
+  cameraZ: number;
+  cameraTargetZ: number;
+  crossingProgress: number;
+
   // Actions
   setStage: (stage: ThresholdStage) => void;
   setMousePosition: (x: number, y: number) => void;
@@ -31,6 +36,8 @@ interface ThresholdState {
   setPrefersReducedMotion: (prefers: boolean) => void;
   setAudioEnabled: (enabled: boolean) => void;
   selectPortal: (portal: 'atlas' | 'grove') => void;
+  setCameraTargetZ: (z: number) => void;
+  startCrossing: () => void;
   reset: () => void;
 }
 
@@ -42,6 +49,9 @@ const initialState = {
   prefersReducedMotion: false,
   audioEnabled: true,
   selectedPortal: null,
+  cameraZ: 0,
+  cameraTargetZ: 0,
+  crossingProgress: 0,
 };
 
 export const useThresholdStore = create<ThresholdState>((set) => ({
@@ -58,6 +68,10 @@ export const useThresholdStore = create<ThresholdState>((set) => ({
   setAudioEnabled: (enabled) => set({ audioEnabled: enabled }),
 
   selectPortal: (portal) => set({ selectedPortal: portal, stage: 'crossing' }),
+
+  setCameraTargetZ: (z) => set({ cameraTargetZ: z }),
+
+  startCrossing: () => set({ crossingProgress: 0 }),
 
   reset: () => set(initialState),
 }));
