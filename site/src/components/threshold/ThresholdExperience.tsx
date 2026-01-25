@@ -1,7 +1,5 @@
 import { VoidScene } from './VoidScene';
 import { CrystallizingText } from './CrystallizingText';
-import { PortalLayer } from './PortalLayer';
-import { CrossingTransition } from './CrossingTransition';
 import { ThresholdOrchestrator } from './ThresholdOrchestrator';
 
 export function ThresholdExperience() {
@@ -10,17 +8,11 @@ export function ThresholdExperience() {
       {/* Logic controller - no visual output */}
       <ThresholdOrchestrator />
 
-      {/* Background layer: void with particles */}
+      {/* Unified 3D scene: void, particles, portals, camera movement */}
       <VoidScene />
 
-      {/* Text layer: crystallizing title */}
+      {/* Text layer: crystallizing title (CSS overlay) */}
       <CrystallizingText />
-
-      {/* Portal layer: navigation options */}
-      <PortalLayer />
-
-      {/* Transition layer: crossing effect */}
-      <CrossingTransition />
     </>
   );
 }
