@@ -1,7 +1,11 @@
-import { useRef, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useRef, useState, useMemo } from 'react';
+import { useFrame, extend } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useAtlasStore } from '../../stores/atlasStore';
+import { MToonNodeMaterial } from './shaders/MToonNode';
+
+// Register the material so R3F knows about <mToonNodeMaterial>
+extend({ MToonNodeMaterial });
 
 interface NodeArtifactProps {
   nodeId: string;
@@ -20,23 +24,39 @@ const BIOME_COLORS: Record<string, string> = {
 
 export function NodeArtifact({ nodeId, position, biome }: NodeArtifactProps) {
   const meshRef = useRef<THREE.Mesh>(null);
+  const materialRef = useRef<any>(null); // Ref to the shader material
   const [hovered, setHovered] = useState(false);
   const setHoveredNode = useAtlasStore((s) => s.setHoveredNode);
   const selectNode = useAtlasStore((s) => s.selectNode);
   const setCameraTarget = useAtlasStore((s) => s.setCameraTarget);
 
-  const color = BIOME_COLORS[biome] || BIOME_COLORS.default;
+  const color = useMemo(() => new THREE.Color(BIOME_COLORS[biome] || BIOME_COLORS.default), [biome]);
+  const rimColor = useMemo(() => new THREE.Color('#ffffff'), []);
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
     if (!meshRef.current) return;
+    
     // Gentle rotation
     meshRef.current.rotation.y += delta * 0.3;
+    
     // Scale on hover
     const targetScale = hovered ? 1.3 : 1;
     meshRef.current.scale.lerp(
       new THREE.Vector3(targetScale, targetScale, targetScale),
       0.1
     );
+
+    // Update Shader Time
+    if (materialRef.current) {
+      materialRef.current.time = state.clock.elapsedTime;
+      // Pulse rim power based on hover
+      const targetRim = hovered ? 3.0 : 2.0;
+      materialRef.current.rimPower = THREE.MathUtils.lerp(
+        materialRef.current.rimPower,
+        targetRim,
+        0.1
+      );
+    }
   });
 
   const handlePointerEnter = () => {
@@ -67,12 +87,13 @@ export function NodeArtifact({ nodeId, position, biome }: NodeArtifactProps) {
       onClick={handleClick}
     >
       <icosahedronGeometry args={[0.8, 1]} />
-      <meshStandardMaterial
+      {/* @ts-ignore - Custom shader material extended in R3F */}
+      <mToonNodeMaterial
+        ref={materialRef}
         color={color}
-        emissive={color}
-        emissiveIntensity={hovered ? 0.5 : 0.2}
-        roughness={0.3}
-        metalness={0.7}
+        rimColor={rimColor}
+        rimPower={2.0}
+        transparent
       />
     </mesh>
   );
