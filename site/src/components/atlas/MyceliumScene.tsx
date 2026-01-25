@@ -40,8 +40,9 @@ export function MyceliumScene({ graphData }: MyceliumSceneProps) {
         {nodes.map((node) => (
           <NodeArtifact
             key={node.id}
+            nodeId={node.id}
             position={[node.x, node.y, node.z]}
-            type={node.biome}
+            biome={node.biome}
           />
         ))}
 
