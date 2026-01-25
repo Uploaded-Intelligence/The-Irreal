@@ -1,6 +1,7 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import { useRef, useEffect } from 'react';
 import * as THREE from 'three';
+import { OrbitControls } from '@react-three/drei';
 import { useAtlasStore } from '../../stores/atlasStore';
 
 export function SporeRig() {
@@ -54,8 +55,22 @@ export function SporeRig() {
   });
 
   return (
-    <group ref={groupRef}>
-      <primitive object={camera} />
-    </group>
+    <>
+      <group ref={groupRef}>
+        <primitive object={camera} />
+      </group>
+      {/* Drag to explore, scroll to zoom (as UI promises) */}
+      <OrbitControls
+        enablePan={false}
+        enableRotate={true}
+        enableZoom={true}
+        enableDamping
+        dampingFactor={0.05}
+        minDistance={8}
+        maxDistance={60}
+        rotateSpeed={0.3}
+        zoomSpeed={0.5}
+      />
+    </>
   );
 }

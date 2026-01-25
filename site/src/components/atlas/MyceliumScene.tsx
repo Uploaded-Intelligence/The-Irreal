@@ -21,6 +21,10 @@ export function MyceliumScene({ graphData }: MyceliumSceneProps) {
   const setGraph = useAtlasStore((s) => s.setGraph);
   const nodes = useAtlasStore((s) => s.nodes);
   const edges = useAtlasStore((s) => s.edges);
+  const selectedNodeId = useAtlasStore((s) => s.selectedNodeId);
+  const focusNextNode = useAtlasStore((s) => s.focusNextNode);
+  const focusPrevNode = useAtlasStore((s) => s.focusPrevNode);
+  const selectNode = useAtlasStore((s) => s.selectNode);
 
   // Compute layout on mount
   useEffect(() => {
@@ -29,6 +33,37 @@ export function MyceliumScene({ graphData }: MyceliumSceneProps) {
       setGraph(positioned, graphData.edges);
     }
   }, [graphData, setGraph]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case 'ArrowRight':
+        case 'ArrowDown':
+        case 'j':
+          e.preventDefault();
+          focusNextNode();
+          break;
+        case 'ArrowLeft':
+        case 'ArrowUp':
+        case 'k':
+          e.preventDefault();
+          focusPrevNode();
+          break;
+        case 'Enter':
+          if (selectedNodeId) {
+            window.location.href = `/world/${selectedNodeId}`;
+          }
+          break;
+        case 'Escape':
+          selectNode(null);
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [focusNextNode, focusPrevNode, selectedNodeId, selectNode]);
 
   return (
     <div style={{ position: 'fixed', inset: 0 }}>
