@@ -1,8 +1,8 @@
 # Session State - The Irreal
 
-**Last Updated**: 2026-01-26 (later session)
+**Last Updated**: 2026-01-26 (navigation fix session)
 **Updated By**: Claude (Opus 4.5)
-**Session Type**: PR Review + Cleanup
+**Session Type**: Navigation Fix + Interactions Implementation
 
 ---
 
@@ -49,16 +49,16 @@ cat SESSION-STATE.md
 ## Cross-LLM Awareness (CRITICAL)
 
 ### Claude's Last Session
-- **Date**: 2026-01-26
+- **Date**: 2026-01-26 (navigation fix session)
 - **Work done**:
-  - Reviewed Gemini's 3D work via SESSION-STATE.md (cross-LLM protocol success!)
-  - Analyzed PR #2 (enhanced-threshold) — found 95% superseded by PR #4
-  - **Closed PR #2** as superseded (unique components: CrossingTransition.tsx, PortalLayer.tsx can be cherry-picked if needed)
-  - Updated SESSION-STATE.md
-- **PRs opened**: None
-- **PRs closed**: #2 (superseded)
-- **Branches touched**: None (documentation only)
-- **Next steps planned**: None — housekeeping complete
+  - **Phase 1**: Fixed NodeArtifact click handler (uncommented `window.location.href`)
+  - **Phase 2**: Added OrbitControls for drag-to-explore/scroll-to-zoom, keyboard navigation (arrows/jk/Enter/Esc)
+  - **Phase 3**: Fixed content preview (shows real title/summary), contextual back navigation using history.back()
+  - Created comprehensive implementation plan at `docs/plans/2026-01-26-navigation-and-interactions.md`
+- **PRs opened**: None (committed directly to main)
+- **Commits**: 4 commits for plan + phases 1-3
+- **Branches touched**: main
+- **Next steps planned**: Phases 4-5 (node labels, biome geometries, reduced motion support)
 
 ### Gemini's Last Session
 - **Date**: 2026-01-25 (approximate)
@@ -82,42 +82,57 @@ cat SESSION-STATE.md
 ## Context for Next LLM (READ THIS)
 
 ### What You Need to Know
-- **Production is live**: https://the-irreal.vercel.app has full 3D experience (Threshold, Atlas, Grove)
-- **Main is canonical**: All feature work merged, no open PRs
-- **Clean slate**: Ready for new feature work
-- **Cross-LLM protocol working**: This session successfully used SESSION-STATE.md to avoid duplicate work
+- **Navigation now works**: Clicking nodes in Atlas navigates to `/world/{id}` pages
+- **Interactions implemented**: Drag to rotate camera, scroll to zoom, arrow keys/jk to cycle nodes, Enter to navigate
+- **Content preview fixed**: Shows real titles and summaries instead of node IDs
+- **Back navigation improved**: Uses browser history when same-origin referrer exists
+- **Production is live**: https://the-irreal.vercel.app — changes pushed to main deploy automatically
 
-### What Got Closed (PR #2)
-PR #2 "Hybridized Creative Tech + 5-Stage Crossing Ritual" was closed because:
-- 95% of content already in main via Gemini's PR #4
-- Remaining unique components (CrossingTransition.tsx, PortalLayer.tsx) are small and can be cherry-picked if needed
-- Production site is superior to PR #2's implementation
+### What's Deferred (Phases 4-5)
+See `docs/plans/2026-01-26-navigation-and-interactions.md`:
+- **Phase 4**: Node labels (troika-three-text), biome-specific geometries (torus/dodecahedron/etc.)
+- **Phase 5**: Reduced motion support (`prefers-reduced-motion`), focus indicators, loading state
+
+### Key Files Changed This Session
+| File | Change |
+|------|--------|
+| `NodeArtifact.tsx` | Enabled navigation, added title/summary props |
+| `SporeRig.tsx` | Added OrbitControls |
+| `atlasStore.ts` | Added keyboard nav state (focusedIndex, focusNextNode, focusPrevNode), summary field |
+| `MyceliumScene.tsx` | Added keyboard event handler, passes title/summary to nodes |
+| `atlas.astro` | Passes summary to graphData |
+| `world/[id].astro` | Contextual back navigation with history.back() |
 
 ### Gotchas
+- **OrbitControls + Custom Camera**: SporeRig has both OrbitControls AND custom damped camera logic — they coexist but may conflict in edge cases
 - **Vercel deployment**: Site is in `/site` subdirectory. `vercel.json` at root is critical.
-- **Preview URLs**: Require Vercel auth unless you're a team member
 - **3D loading**: Takes a moment on first visit — wait for WebGL to initialize
 
 ### Recommended First Action
 1. Run pre-flight checks above
-2. Add content (more worlds) or enhance existing 3D features
-3. Or: implement crossing transition refinements if needed
+2. Test navigation flow: Threshold → Atlas → click node → World page → Back
+3. If ready for more features: Implement Phase 4 (node labels, biome geometries)
 
 ---
 
 ## This Session's Work (Update Before Ending)
 
 ### Completed
-- [x] Reviewed Gemini's 3D work (Mycelium Atlas, threshold components)
-- [x] Analyzed PR #2 for unique vs. superseded content
-- [x] Closed PR #2 with documented rationale
+- [x] Created implementation plan (`docs/plans/2026-01-26-navigation-and-interactions.md`)
+- [x] Phase 1: Fixed node click navigation (uncommented href in NodeArtifact)
+- [x] Phase 2: Added OrbitControls (drag/zoom) + keyboard navigation
+- [x] Phase 3: Fixed content preview (title/summary) + contextual back navigation
 - [x] Updated SESSION-STATE.md
 
 ### In Progress (if session interrupted)
-- None
+- None — Phases 1-3 complete
 
 ### Blocked / Needs Help
 - None currently
+
+### Deferred to Next Session
+- Phase 4: Node labels, biome-specific geometries
+- Phase 5: Reduced motion support, focus indicators
 
 ---
 
