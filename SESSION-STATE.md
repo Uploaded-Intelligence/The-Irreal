@@ -60,7 +60,7 @@ cat SESSION-STATE.md
   - Implementing cross-LLM synchronization protocol (this session)
 - **PRs opened**: None (closed #5 as redundant)
 - **Branches touched**: main (via PR merge)
-- **Next steps planned**: Complete cross-LLM protocol implementation, review PR #2
+- **Next steps planned**: Review PR #2 (enhanced-threshold), decide: merge, close, or document
 
 ### Gemini's Last Session
 - **Date**: 2026-01-25 (approximate)
@@ -109,12 +109,12 @@ cat SESSION-STATE.md
 - [x] Merged PR #4 (mycelium-atlas to main)
 - [x] Verified production deployment
 - [x] Created enhanced SESSION-STATE.md template (this file)
-- [ ] Added cross-LLM protocol to CLAUDE.md
-- [ ] Created global cross-llm-sync rule
-- [ ] Validated protocol end-to-end
+- [x] Added cross-LLM protocol to CLAUDE.md
+- [x] Created global cross-llm-sync rule (vault + ~/.claude/rules/)
+- [x] Validated protocol end-to-end
 
 ### In Progress (if session interrupted)
-- Implementing cross-LLM synchronization protocol (Phase 1-4)
+- None — protocol implementation complete
 
 ### Blocked / Needs Help
 - None currently
