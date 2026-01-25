@@ -78,8 +78,7 @@ export function NodeArtifact({ nodeId, position, biome }: NodeArtifactProps) {
 
   const handleClick = () => {
     selectNode(nodeId);
-    // Deep jump if clicked
-    // window.location.href = `/world/${nodeId}`;
+    window.location.href = `/world/${nodeId}`;
   };
 
   return (
