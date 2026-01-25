@@ -12,9 +12,10 @@ interface PortalProps {
   label: string;
   hint: string;
   onClick: () => void;
+  scale?: number;
 }
 
-export function Portal({ position, color, glowColor, label, hint, onClick }: PortalProps) {
+export function Portal({ position, color, glowColor, label, hint, onClick, scale = 2.5 }: PortalProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
   const hoverValue = useRef(0);
@@ -58,7 +59,7 @@ export function Portal({ position, color, glowColor, label, hint, onClick }: Por
           setHovered(false);
           document.body.style.cursor = 'default';
         }}
-        scale={2.5} // Larger canvas for the shader to draw in
+        scale={scale}
       >
         <planeGeometry args={[2, 2]} />
         <shaderMaterial
