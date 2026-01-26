@@ -1,12 +1,16 @@
 import { useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { SporeRig } from './SporeRig';
+import { FirstPersonRig } from './FirstPersonRig';
+import { InputController } from './InputController';
+import { VisitorTrail } from './VisitorTrail';
+import { HyperdriveController } from './HyperdriveController';
 import { NodeArtifact } from './NodeArtifact';
 import { VeinFlow } from './VeinFlow';
 import { VoidMatrixParticles } from './VoidMatrixParticles';
 import { LureBeam } from './LureBeam';
+import { AtlasHUD } from './hud/AtlasHUD';
 import { useAtlasStore } from '../../stores/atlasStore';
-import { computeLayout } from '../../lib/forceLayout3D';
+import { computeBiomeLayout } from '../../lib/atlas/biomeLayout';
 
 interface GraphData {
   nodes: Array<{ id: string; title: string; summary?: string; biome: string; stage: string }>;
@@ -21,62 +25,32 @@ export function MyceliumScene({ graphData }: MyceliumSceneProps) {
   const setGraph = useAtlasStore((s) => s.setGraph);
   const nodes = useAtlasStore((s) => s.nodes);
   const edges = useAtlasStore((s) => s.edges);
-  const selectedNodeId = useAtlasStore((s) => s.selectedNodeId);
-  const focusNextNode = useAtlasStore((s) => s.focusNextNode);
-  const focusPrevNode = useAtlasStore((s) => s.focusPrevNode);
-  const selectNode = useAtlasStore((s) => s.selectNode);
 
-  // Compute layout on mount
+  // Compute deterministic biome layout on mount
   useEffect(() => {
     if (graphData.nodes.length > 0) {
-      const positioned = computeLayout(graphData.nodes, graphData.edges);
+      const positioned = computeBiomeLayout(graphData.nodes);
       setGraph(positioned, graphData.edges);
     }
   }, [graphData, setGraph]);
 
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      switch (e.key) {
-        case 'ArrowRight':
-        case 'ArrowDown':
-        case 'j':
-          e.preventDefault();
-          focusNextNode();
-          break;
-        case 'ArrowLeft':
-        case 'ArrowUp':
-        case 'k':
-          e.preventDefault();
-          focusPrevNode();
-          break;
-        case 'Enter':
-          if (selectedNodeId) {
-            window.location.href = `/world/${selectedNodeId}`;
-          }
-          break;
-        case 'Escape':
-          selectNode(null);
-          break;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [focusNextNode, focusPrevNode, selectedNodeId, selectNode]);
-
   return (
-    <div style={{ position: 'fixed', inset: 0 }}>
-      <Canvas camera={{ position: [0, 0, 30], fov: 60 }}>
-        <SporeRig />
+    <div style={{ position: 'fixed', inset: 0, cursor: 'crosshair' }}>
+      <Canvas camera={{ position: [0, 5, 20], fov: 70 }}>
+        {/* Navigation System */}
+        <FirstPersonRig />
+        <HyperdriveController />
+        <VisitorTrail />
+
+        {/* Environment */}
         <VoidMatrixParticles count={64} />
         <LureBeam />
         <ambientLight intensity={0.4} />
         <pointLight position={[10, 10, 10]} intensity={1} />
         <pointLight position={[-10, -10, -10]} intensity={0.5} color="#6bc5ff" />
 
-        {/* Render nodes */}
-        {nodes.map((node: any) => (
+        {/* Nodes */}
+        {nodes.map((node) => (
           <NodeArtifact
             key={node.id}
             nodeId={node.id}
@@ -87,10 +61,10 @@ export function MyceliumScene({ graphData }: MyceliumSceneProps) {
           />
         ))}
 
-        {/* Render veins */}
-        {edges.map((edge: any) => {
-          const source = nodes.find((n: any) => n.id === edge.source);
-          const target = nodes.find((n: any) => n.id === edge.target);
+        {/* Connections */}
+        {edges.map((edge) => {
+          const source = nodes.find((n) => n.id === edge.source);
+          const target = nodes.find((n) => n.id === edge.target);
           if (!source || !target) return null;
           return (
             <VeinFlow
@@ -101,6 +75,32 @@ export function MyceliumScene({ graphData }: MyceliumSceneProps) {
           );
         })}
       </Canvas>
+
+      {/* Input handling outside canvas */}
+      <InputController />
+
+      {/* HUD Overlay */}
+      <AtlasHUD />
+
+      {/* Instructions overlay - minimal, HUD has the details now */}
+      <div style={{
+        position: 'fixed',
+        bottom: 20,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        background: 'rgba(0,0,0,0.6)',
+        color: '#88ddff',
+        padding: '8px 16px',
+        borderRadius: 8,
+        fontFamily: 'monospace',
+        fontSize: 11,
+        textAlign: 'center',
+        pointerEvents: 'none',
+        backdropFilter: 'blur(8px)',
+        opacity: 0.7,
+      }}>
+        Click to look | WASD move | Shift boost | H toggle HUD
+      </div>
     </div>
   );
 }

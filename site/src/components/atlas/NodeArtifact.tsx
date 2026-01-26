@@ -32,8 +32,9 @@ export function NodeArtifact({ nodeId, title, summary, position, biome }: NodeAr
   const [bloom, setBloom] = useState(0);
   
   const setHoveredNode = useAtlasStore((s) => s.setHoveredNode);
-  const selectNode = useAtlasStore((s) => s.selectNode);
-  const setCameraTarget = useAtlasStore((s) => s.setCameraTarget);
+  const initiateHyperdrive = useAtlasStore((s) => s.initiateHyperdrive);
+  const hyperdrive = useAtlasStore((s) => s.hyperdrive);
+  const cameraPosition = useAtlasStore((s) => s.cameraPosition);
 
   const color = useMemo(() => new THREE.Color(BIOME_COLORS[biome] || BIOME_COLORS.default), [biome]);
   const rimColor = useMemo(() => new THREE.Color('#ffffff'), []);
@@ -68,7 +69,6 @@ export function NodeArtifact({ nodeId, title, summary, position, biome }: NodeAr
   const handlePointerEnter = () => {
     setHovered(true);
     setHoveredNode(nodeId, position);
-    setCameraTarget(position);
     document.body.style.cursor = 'pointer';
   };
 
@@ -79,8 +79,11 @@ export function NodeArtifact({ nodeId, title, summary, position, biome }: NodeAr
   };
 
   const handleClick = () => {
-    selectNode(nodeId);
-    window.location.href = `/world/${nodeId}`;
+    // Don't initiate if already in hyperdrive
+    if (hyperdrive.phase !== 'idle') return;
+
+    // Start the ceremonial hyperdrive journey
+    initiateHyperdrive(nodeId, position, cameraPosition);
   };
 
   return (
