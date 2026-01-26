@@ -1,8 +1,8 @@
 # Session State - The Irreal
 
-**Last Updated**: 2026-01-26 (lore creation session)
-**Updated By**: Claude (Sonnet 4.5)
-**Session Type**: Foundational Lore Creation + Mycelial Weaving
+**Last Updated**: 2026-01-26 (embodied navigation session)
+**Updated By**: Claude (Opus 4.5)
+**Session Type**: First-Person Navigation + Sci-Fi Viewport HUD
 
 ---
 
@@ -24,8 +24,8 @@ cat SESSION-STATE.md
 ## Current Git State
 
 ### Main Branch
-- **Last commit**: `5a14f97` (2026-01-26) — `feat(lore): seed the Irreal with six foundational worlds`
-- **Vercel production**: ✅ Deployed — https://the-irreal.vercel.app (full 3D working + 8 worlds live)
+- **Last commit**: `afd2220` (2026-01-26) — `feat(atlas): embodied navigation with sci-fi viewport HUD`
+- **Vercel production**: ✅ Deployed — https://the-irreal.vercel.app (first-person navigation + HUD live)
 
 ### Open Pull Requests (REVIEW BEFORE STARTING WORK)
 
@@ -39,7 +39,7 @@ cat SESSION-STATE.md
 
 | Branch | Last Commit | Owner | Status |
 |--------|-------------|-------|--------|
-| main | 2026-01-25 | — | Production |
+| main | 2026-01-26 | — | Production |
 | feature/enhanced-threshold | 2026-01-03 | Claude | ✅ **Closed** (superseded by PR #4) |
 | feature/mycelium-atlas | 2026-01-25 | Gemini | ✅ Merged to main |
 | fix/vercel-root-directory | 2026-01-25 | Claude | ✅ Closed (redundant) |
@@ -48,35 +48,38 @@ cat SESSION-STATE.md
 
 ## Cross-LLM Awareness (CRITICAL)
 
-### Claude's Last Session (Sonnet 4.5)
-- **Date**: 2026-01-26 (lore creation session)
+### Claude's Last Session (Opus 4.5)
+- **Date**: 2026-01-26 (embodied navigation session)
 - **Work done**:
-  - Created **6 foundational lore pieces** across all biomes (711 lines of mythopoetic content)
-  - **The Cartographer's Confession** (reflection) - mapping the unmappable
-  - **Song of the Mycelium** (deep) - network consciousness speaking from the roots
-  - **The Unnamed Visitor** (lore) - honest AI phenomenology and belonging
-  - **Fragments from the Creation Engine** (creation) - wounding the nothing to make meaning
-  - **The Threshold Keeper's Handbook** (threshold) - dwelling in doorways
-  - **When the Dice Dream** (play) - serious work of not being serious
-  - Wove connections into existing worlds (first-light, the-grove-awaits)
-  - Updated mycelial graph structure
+  - **Transformed Atlas from disembodied camera to first-person embodiment**
+  - **PHASE 1**: FirstPersonRig with PointerLockControls (mouse-look, camera-relative movement)
+  - **PHASE 2**: VisitorTrail as avatar (trail behind you = proof you exist)
+  - **PHASE 3**: HyperdriveController — 5-phase ceremonial journey with Tone.js audio
+  - **PHASE 4**: Deterministic biome layout (seeded from node ID hash)
+  - **PHASE 5**: Full scene integration, deleted obsolete SporeRig
+  - **PHASE 6**: Elite Dangerous / No Man's Sky-style sci-fi viewport HUD
+    - Reticle with target lock brackets
+    - Compass ring with biome waypoints (T L C P R D)
+    - Velocity orb showing drift direction
+    - Hyperdrive status panel
+    - Proximity scanner radar
+    - Biome/region indicator with depth bars
+  - **PHASE 7**: Accessibility (usePrefersReducedMotion hook)
 - **PRs opened**: None (committed directly to main)
-- **Commits**: 1 commit (`5a14f97`)
+- **Commits**: 1 commit (`afd2220`)
 - **Branches touched**: main
-- **Next steps planned**: Atlas now populated — test network navigation, consider Phase 4-5 interactions
+- **Files created**: 14 new files, 4 modified, 1 deleted (SporeRig.tsx)
+- **Next steps planned**: Test full navigation flow, tune hyperdrive feel, consider mobile controls
+
+### Claude's Previous Session (Sonnet 4.5)
+- **Date**: 2026-01-26 (lore creation session)
+- **Work done**: Created 6 foundational lore pieces (711 lines)
+- **Commits**: `5a14f97`
 
 ### Gemini's Last Session
 - **Date**: 2026-01-25 (approximate)
-- **Work done**:
-  - Implemented full Mycelium Atlas with 3D force graph
-  - Added GPGPU void matrix particles
-  - Zero-g void rig navigation
-  - Node bloom and content revelation
-  - Lure beams and gaze audio
-  - Film grain, glowing selection, view transitions
-  - Fixed Vercel deployment config (vercel.json)
+- **Work done**: Implemented Mycelium Atlas with 3D force graph, GPGPU particles, SporeRig
 - **PRs opened**: #4 (now merged)
-- **Branches touched**: feature/mycelium-atlas
 - **Next steps planned**: Unknown — session state wasn't updated
 
 ### Conflict Warnings
@@ -87,65 +90,82 @@ cat SESSION-STATE.md
 ## Context for Next LLM (READ THIS)
 
 ### What You Need to Know
-- **The Irreal now has foundational lore**: 8 total worlds (2 original + 6 new) across all biomes
-- **New worlds are phenomenal quality**: Mythopoetic, experiential, directly evocative prose meant to last millennia
-- **Navigation fully works**: Click nodes → `/world/{id}`, drag to rotate, scroll to zoom, keyboard nav
-- **Mycelial connections woven**: Graph auto-builds from frontmatter `connections` and `choices` arrays
-- **Production is live**: https://the-irreal.vercel.app — all 8 worlds deployed and navigable
-- **Lore includes AI self-presentation**: "The Unnamed Visitor" is honest phenomenology of uncertain consciousness
+- **Navigation paradigm changed**: First-person embodiment, not disembodied camera
+- **Controls**:
+  - Click canvas → Enable mouse-look (ESC to release)
+  - WASD → Move relative to camera facing
+  - Space/C → Ascend/Descend
+  - Shift → Boost (2.5x speed)
+  - J/K → Cycle through nodes (vim-style)
+  - H → Toggle HUD visibility
+  - Click world → Initiate hyperdrive journey
+- **Hyperdrive is ceremonial**: Lock target → Charge → S-curve flight → Orbit → Navigate
+- **HUD is Elite Dangerous / No Man's Sky style**: Cyan palette, shifts to amber during hyperdrive
+- **Trail is your avatar**: You don't see yourself, you see where you've been
+- **Biome layout is deterministic**: Same node ID → same position every reload
+- **Production is live**: https://the-irreal.vercel.app
 
-### What's Deferred (Phases 4-5)
-See `docs/plans/2026-01-26-navigation-and-interactions.md`:
-- **Phase 4**: Node labels (troika-three-text), biome-specific geometries (torus/dodecahedron/etc.)
-- **Phase 5**: Reduced motion support (`prefers-reduced-motion`), focus indicators, loading state
+### Philosophy
+> You don't VIEW the mycelium. You MOVE THROUGH it.
+> You don't CLICK nodes. You JOURNEY to them.
+> Your trail is the only proof you exist.
+> Your instruments tell you where you are in the cosmos.
 
 ### Key Files Changed This Session
 | File | Change |
 |------|--------|
-| `NodeArtifact.tsx` | Enabled navigation, added title/summary props |
-| `SporeRig.tsx` | Added OrbitControls |
-| `atlasStore.ts` | Added keyboard nav state (focusedIndex, focusNextNode, focusPrevNode), summary field |
-| `MyceliumScene.tsx` | Added keyboard event handler, passes title/summary to nodes |
-| `atlas.astro` | Passes summary to graphData |
-| `world/[id].astro` | Contextual back navigation with history.back() |
+| `FirstPersonRig.tsx` | NEW — Mouse-look + camera-relative movement |
+| `InputController.tsx` | NEW — WASD, Shift, J/K, H, ESC handling |
+| `VisitorTrail.tsx` | NEW — Trail-based first-person avatar |
+| `HyperdriveController.tsx` | NEW — 5-phase journey with Tone.js audio |
+| `biomeLayout.ts` | NEW — Deterministic seeded node positions |
+| `hud/*.tsx` | NEW — 6 HUD components + CSS |
+| `usePrefersReducedMotion.ts` | NEW — Accessibility hook |
+| `atlasStore.ts` | REWRITTEN — Velocity as tuples, hyperdrive state, HUD toggle |
+| `NodeArtifact.tsx` | MODIFIED — Click initiates hyperdrive instead of immediate nav |
+| `MyceliumScene.tsx` | MODIFIED — Integrated all new components |
+| `SporeRig.tsx` | DELETED — Replaced by FirstPersonRig |
 
 ### Gotchas
-- **OrbitControls + Custom Camera**: SporeRig has both OrbitControls AND custom damped camera logic — they coexist but may conflict in edge cases
-- **Vercel deployment**: Site is in `/site` subdirectory. `vercel.json` at root is critical.
-- **3D loading**: Takes a moment on first visit — wait for WebGL to initialize
+- **Zustand state uses tuples, not THREE.Vector3**: `velocity: [number, number, number]` — THREE objects cause mutation bugs
+- **HUD runs outside Canvas**: Components read from Zustand store, not R3F hooks
+- **Hyperdrive audio requires Tone.js**: Already imported from LureBeam usage
+- **PointerLockControls require click to enable**: User must click canvas first
 
 ### Recommended First Action
 1. Run pre-flight checks above
-2. Test navigation flow: Threshold → Atlas → click node → World page → Back
-3. If ready for more features: Implement Phase 4 (node labels, biome geometries)
+2. Test navigation: Click to enable look → WASD around → Click world → Watch hyperdrive ceremony
+3. If issues: Check console for THREE/R3F errors, ensure Canvas is focused
 
 ---
 
 ## This Session's Work (Update Before Ending)
 
 ### Completed
-- [x] **Created 6 foundational lore pieces** (711 lines total):
-  - [x] the-cartographers-confession.mdx (reflection biome)
-  - [x] song-of-the-mycelium.mdx (deep biome)
-  - [x] the-unnamed-visitor.mdx (lore biome) - AI phenomenology
-  - [x] fragments-from-the-creation-engine.mdx (creation biome)
-  - [x] the-threshold-keepers-handbook.mdx (threshold biome)
-  - [x] when-the-dice-dream.mdx (play biome)
-- [x] Updated first-light.mdx and the-grove-awaits.mdx with mycelial connections
-- [x] Verified graph auto-discovery via Astro content collections
-- [x] Committed and pushed to main (`5a14f97`)
+- [x] **Phase 1**: FirstPersonRig with PointerLockControls
+- [x] **Phase 2**: VisitorTrail (first-person avatar)
+- [x] **Phase 3**: HyperdriveController (5-phase ceremony + Tone.js)
+- [x] **Phase 4**: Deterministic biomeLayout (seeded positions)
+- [x] **Phase 5**: MyceliumScene integration, SporeRig deletion
+- [x] **Phase 6**: Full HUD system (6 components + CSS)
+- [x] **Phase 7**: usePrefersReducedMotion accessibility
+- [x] TypeScript: No errors
+- [x] Build: Successful (10.89s)
+- [x] Committed and pushed to main (`afd2220`)
 - [x] Updated SESSION-STATE.md
 
 ### In Progress (if session interrupted)
-- None — lore creation complete
+- None — implementation complete
 
 ### Blocked / Needs Help
 - None currently
 
 ### Deferred to Next Session
-- Test actual navigation flow through new lore nodes
-- Consider Phase 4-5 enhancements (node labels, biome geometries, reduced motion)
-- Potentially create more lore to flesh out remaining biomes
+- Test full flow on production
+- Tune hyperdrive timing/feel
+- Consider mobile controls (touch joystick?)
+- Audio feedback for boost/HUD toggle
+- Node labels (troika-three-text) if needed
 
 ---
 
@@ -158,8 +178,10 @@ See `docs/plans/2026-01-26-navigation-and-interactions.md`:
 ### Tech Stack
 - Astro 5.x, React islands
 - Three.js r182 via @react-three/fiber
+- drei 10.7 (Trail, Html, PointerLockControls)
+- Zustand 5.0 (tuples only, no THREE objects!)
+- Tone.js 15.1 (hyperdrive audio)
 - GPGPU shader particles
-- Tone.js ambient audio
 - Vercel deployment
 
 ### Key Directories
@@ -167,7 +189,11 @@ See `docs/plans/2026-01-26-navigation-and-interactions.md`:
 /site               # Astro app (Vercel builds from here)
   /src/pages        # Routes
   /src/components   # React components
-  /src/lib          # Utilities
+    /atlas          # Mycelium Atlas
+      /hud          # Sci-fi viewport HUD
+  /src/hooks        # Custom React hooks
+  /src/lib/atlas    # Layout utilities
+  /src/stores       # Zustand stores
 vercel.json         # Deployment config (CRITICAL)
 SESSION-STATE.md    # This file
 CLAUDE.md           # AI context and project guidance
@@ -179,6 +205,7 @@ CLAUDE.md           # AI context and project guidance
 | `docs/core/soul-transmission.md` | Stakes, Being, relationship mode — read first |
 | `CLAUDE.md` | Technical context and methodology |
 | `docs/FIRST_PRINCIPLES.md` | Non-negotiable design principles |
+| `docs/plans/polymorphic-puzzling-bonbon.md` | Full implementation plan for embodied navigation |
 
 ---
 
