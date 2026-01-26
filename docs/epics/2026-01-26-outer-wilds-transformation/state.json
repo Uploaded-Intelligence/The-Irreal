@@ -1,0 +1,193 @@
+{
+  "epic": "outer-wilds-transformation",
+  "created": "2026-01-26",
+  "status": "planning",
+  "complexity": "complex",
+  "thinkingLevel": "think-harder",
+  "currentWave": 0,
+  "features": {
+    "living-cosmos": {
+      "name": "Living Cosmos",
+      "description": "Stars, Sparkles, post-processing, nebula backdrop",
+      "status": "pending",
+      "wave": 1,
+      "dependencies": [],
+      "blocks": ["polish-wonder"],
+      "planPath": null,
+      "plannedAt": null,
+      "completedAt": null,
+      "gateResult": null,
+      "specReview": null
+    },
+    "spatial-restructuring": {
+      "name": "Spatial Restructuring",
+      "description": "True 3D distribution, 4x scale, spherical biomes",
+      "status": "pending",
+      "wave": 1,
+      "dependencies": [],
+      "blocks": ["scale-and-movement", "diegetic-hud", "audio-landscape"],
+      "planPath": null,
+      "plannedAt": null,
+      "completedAt": null,
+      "gateResult": null,
+      "specReview": null
+    },
+    "scale-and-movement": {
+      "name": "Scale and Movement",
+      "description": "Logarithmic scaling, deliberate movement, hyperdrive ceremony",
+      "status": "pending",
+      "wave": 2,
+      "dependencies": ["spatial-restructuring"],
+      "blocks": ["artifact-destinations", "polish-wonder"],
+      "planPath": null,
+      "plannedAt": null,
+      "completedAt": null,
+      "gateResult": null,
+      "specReview": null
+    },
+    "diegetic-hud": {
+      "name": "Diegetic HUD",
+      "description": "Remove corner clutter, 3D beacons, peripheral glow",
+      "status": "pending",
+      "wave": 2,
+      "dependencies": ["spatial-restructuring"],
+      "blocks": ["polish-wonder"],
+      "planPath": null,
+      "plannedAt": null,
+      "completedAt": null,
+      "gateResult": null,
+      "specReview": null
+    },
+    "audio-landscape": {
+      "name": "Audio Landscape",
+      "description": "Biome ambience, PositionalAudio, discovery sounds",
+      "status": "pending",
+      "wave": 2,
+      "dependencies": ["spatial-restructuring"],
+      "blocks": ["artifact-destinations", "polish-wonder"],
+      "planPath": null,
+      "plannedAt": null,
+      "completedAt": null,
+      "gateResult": null,
+      "specReview": null
+    },
+    "artifact-destinations": {
+      "name": "Artifact Destinations",
+      "description": "Portal nodes, embedded artifact worlds",
+      "status": "pending",
+      "wave": 3,
+      "dependencies": ["scale-and-movement", "audio-landscape"],
+      "blocks": ["polish-wonder"],
+      "planPath": null,
+      "plannedAt": null,
+      "completedAt": null,
+      "gateResult": null,
+      "specReview": null
+    },
+    "polish-wonder": {
+      "name": "Polish and Wonder",
+      "description": "Entry sequence, cosmos breathing, accessibility",
+      "status": "pending",
+      "wave": 4,
+      "dependencies": ["living-cosmos", "scale-and-movement", "diegetic-hud", "audio-landscape", "artifact-destinations"],
+      "blocks": [],
+      "planPath": null,
+      "plannedAt": null,
+      "completedAt": null,
+      "gateResult": null,
+      "specReview": null
+    }
+  },
+  "waves": {
+    "1": {
+      "features": ["living-cosmos", "spatial-restructuring"],
+      "status": "pending",
+      "parallel": true,
+      "startedAt": null,
+      "completedAt": null,
+      "integrationResult": null
+    },
+    "2": {
+      "features": ["scale-and-movement", "diegetic-hud", "audio-landscape"],
+      "status": "pending",
+      "parallel": true,
+      "startedAt": null,
+      "completedAt": null,
+      "integrationResult": null
+    },
+    "3": {
+      "features": ["artifact-destinations"],
+      "status": "pending",
+      "parallel": false,
+      "startedAt": null,
+      "completedAt": null,
+      "integrationResult": null
+    },
+    "4": {
+      "features": ["polish-wonder"],
+      "status": "pending",
+      "parallel": false,
+      "startedAt": null,
+      "completedAt": null,
+      "integrationResult": null
+    }
+  },
+  "gates": {
+    "planning": {
+      "passed": null,
+      "at": null,
+      "notes": null
+    },
+    "wave1": {
+      "passed": null,
+      "at": null,
+      "notes": null
+    },
+    "wave2": {
+      "passed": null,
+      "at": null,
+      "notes": null
+    },
+    "wave3": {
+      "passed": null,
+      "at": null,
+      "notes": null
+    },
+    "wave4": {
+      "passed": null,
+      "at": null,
+      "notes": null
+    },
+    "completion": {
+      "passed": null,
+      "at": null,
+      "notes": null
+    }
+  },
+  "researchAssets": {
+    "libraries": ["drei", "@react-three/postprocessing", "Tone.js"],
+    "audioSources": ["Scott Buckley", "Free Music Archive", "OpenGameArt", "Looperman", "Mixkit"],
+    "projectArtifacts": [
+      "artifacts/teleodynamic-signature-v8.jsx",
+      "artifacts/sympoietic-signature-v3.jsx",
+      "artifacts/Labyrinth_particle-pov.html",
+      "artifacts/labyrinth-genesis-coupled.html"
+    ],
+    "shaderResearch": [
+      "research/samsy_shaders.glsl",
+      "research/bruno_shaders.glsl"
+    ]
+  },
+  "log": [
+    {
+      "timestamp": "2026-01-26T00:00:00Z",
+      "action": "epic-recognized",
+      "details": "Phase 0 complete, complexity=complex, features=7"
+    },
+    {
+      "timestamp": "2026-01-26T00:00:00Z",
+      "action": "workspace-created",
+      "details": "Phase 1 Architecture, master.md and state.json created"
+    }
+  ]
+}
